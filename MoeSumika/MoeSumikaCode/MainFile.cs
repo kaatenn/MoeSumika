@@ -1,6 +1,7 @@
 using Godot;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Modding;
+using MoeSumika.MoeSumikaCode.Weapons.Effects;
 
 namespace MoeSumika.MoeSumikaCode;
 
@@ -18,5 +19,6 @@ public partial class MainFile : Node
         Harmony harmony = new(ModId);
 
         harmony.PatchAll();
+        WeaponEffects.Register("MOESUMIKA-BROKEN_SWORD", new BrokenSwordWeaponEffect());
     }
 }

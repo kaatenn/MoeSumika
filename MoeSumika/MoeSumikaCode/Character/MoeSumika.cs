@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Relics;
+using MoeSumika.MoeSumikaCode.Relics;
 
 namespace MoeSumika.MoeSumikaCode.Character;
 
@@ -35,7 +36,7 @@ public class MoeSumika : PlaceholderCharacterModel
 
     public override IReadOnlyList<RelicModel> StartingRelics =>
     [
-        ModelDb.Relic<BurningBlood>()
+        ModelDb.Relic<BrokenSword>()
     ];
 
     public override CardPoolModel CardPool => ModelDb.CardPool<MoeSumikaCardPool>();

@@ -1,11 +1,10 @@
 ﻿using BaseLib.Abstracts;
 using BaseLib.Utils.NodeFactories;
-using MoeSumika.MoeSumikaCode.Extensions;
 using Godot;
 using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
-using MegaCrit.Sts2.Core.Models.Relics;
+using MoeSumika.MoeSumikaCode.Extensions;
 using MoeSumika.MoeSumikaCode.Relics;
 
 namespace MoeSumika.MoeSumikaCode.Character;
@@ -36,7 +35,7 @@ public class MoeSumika : PlaceholderCharacterModel
 
     public override IReadOnlyList<RelicModel> StartingRelics =>
     [
-        ModelDb.Relic<BrokenSword>()
+        ModelDb.Relic<BrokenSwordRelic>()
     ];
 
     public override CardPoolModel CardPool => ModelDb.CardPool<MoeSumikaCardPool>();

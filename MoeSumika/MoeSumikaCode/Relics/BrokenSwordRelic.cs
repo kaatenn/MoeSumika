@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.Entities.Rewards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Rewards;
+using MegaCrit.Sts2.Core.Rooms;
 using MegaCrit.Sts2.Core.Saves.Runs;
 using MoeSumika.MoeSumikaCode.Extensions;
 using MoeSumika.MoeSumikaCode.Weapons;
@@ -13,7 +14,7 @@ using MoeSumika.MoeSumikaCode.Weapons.Effects;
 
 namespace MoeSumika.MoeSumikaCode.Relics;
 
-public class BrokenSword : MoeSumikaRelic, IWeaponSlotSaveCarrier
+public class BrokenSwordRelic : MoeSumikaRelic, IWeaponSlotSaveCarrier
 {
     private const string DraftWeaponAlternativeId = "MOESUMIKA-DRAFT_WEAPON";
     private const string UpgradeWeaponAlternativeId = "MOESUMIKA-UPGRADE_WEAPON";
@@ -27,129 +28,25 @@ public class BrokenSword : MoeSumikaRelic, IWeaponSlotSaveCarrier
     protected override string PackedIconOutlinePath => "relic_outline.png".RelicImagePath();
     protected override string BigIconPath => "relic.png".BigRelicImagePath();
 
-    [SavedProperty]
-    public bool SavedHasWeapon { get; set; }
+    [SavedProperty] public bool SavedHasWeapon { get; set; }
 
-    [SavedProperty]
-    public string SavedWeaponId { get; set; } = string.Empty;
+    [SavedProperty] public string SavedWeaponId { get; set; } = string.Empty;
 
-    [SavedProperty]
-    public int SavedWeaponKind { get; set; }
+    [SavedProperty] public int SavedWeaponKind { get; set; }
 
-    [SavedProperty]
-    public int SavedWeaponLevel { get; set; }
+    [SavedProperty] public int SavedWeaponLevel { get; set; }
 
-    [SavedProperty]
-    public int SavedWeaponUpgradeCount { get; set; }
+    [SavedProperty] public int SavedWeaponUpgradeCount { get; set; }
 
-    [SavedProperty]
-    public bool SavedHasSecondaryWeapon { get; set; }
+    [SavedProperty] public bool SavedHasSecondaryWeapon { get; set; }
 
-    [SavedProperty]
-    public string SavedSecondaryWeaponId { get; set; } = string.Empty;
+    [SavedProperty] public string SavedSecondaryWeaponId { get; set; } = string.Empty;
 
-    [SavedProperty]
-    public int SavedSecondaryWeaponKind { get; set; }
+    [SavedProperty] public int SavedSecondaryWeaponKind { get; set; }
 
-    [SavedProperty]
-    public int SavedSecondaryWeaponLevel { get; set; }
+    [SavedProperty] public int SavedSecondaryWeaponLevel { get; set; }
 
-    [SavedProperty]
-    public int SavedSecondaryWeaponUpgradeCount { get; set; }
-
-    public override async Task AfterObtained()
-    {
-        EnsureWeaponEquipped();
-        await base.AfterObtained();
-    }
-
-    public override Task BeforeCombatStart()
-    {
-        var slot = EnsureWeaponSlotEquipped();
-        return WeaponEffects.BeforeCombatStart(slot, Owner);
-    }
-
-    public override Task AfterSideTurnStart(CombatSide side, ICombatState combatState)
-    {
-        var slot = EnsureWeaponSlotEquipped();
-        return WeaponEffects.AfterSideTurnStart(slot, Owner, side, combatState);
-    }
-
-    public override Task BeforeCardPlayed(CardPlay cardPlay)
-    {
-        var slot = EnsureWeaponSlotEquipped();
-        return WeaponEffects.BeforeCardPlayed(slot, cardPlay);
-    }
-
-    public override Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
-    {
-        var slot = EnsureWeaponSlotEquipped();
-        return WeaponEffects.AfterCardPlayed(slot, choiceContext, cardPlay);
-    }
-
-    public override Task BeforeTurnEnd(PlayerChoiceContext choiceContext, CombatSide side)
-    {
-        var slot = EnsureWeaponSlotEquipped();
-        return WeaponEffects.BeforeTurnEnd(slot, choiceContext, side);
-    }
-
-    public override bool TryModifyCardRewardAlternatives(
-        Player player,
-        CardReward cardReward,
-        List<CardRewardAlternative> alternatives)
-    {
-        if (!ReferenceEquals(player, Owner))
-            return false;
-
-        EnsureWeaponEquipped();
-
-        alternatives.Add(new CardRewardAlternative(
-            DraftWeaponAlternativeId,
-            DraftWeapon,
-            PostAlternateCardRewardAction.EndSelectionAndCompleteReward));
-
-        alternatives.Add(new CardRewardAlternative(
-            UpgradeWeaponAlternativeId,
-            UpgradeWeapon,
-            PostAlternateCardRewardAction.EndSelectionAndCompleteReward));
-
-        return true;
-    }
-
-    private Task DraftWeapon()
-    {
-        var slot = GetWeaponSlot();
-        slot.EnsureWeaponEquipped(WeaponState.CreateBrokenSword());
-
-        // TODO: Generate weapon choices, show a keep/discard selection UI, and call slot.EquipWeapon
-        // if the player keeps one. For now, this is intentionally a no-op placeholder.
-        return Task.CompletedTask;
-    }
-
-    private Task UpgradeWeapon()
-    {
-        var slot = GetWeaponSlot();
-        slot.EnsureWeaponEquipped(WeaponState.CreateBrokenSword());
-        slot.UpgradeCurrentWeapon();
-        return Task.CompletedTask;
-    }
-
-    private WeaponState EnsureWeaponEquipped()
-    {
-        return EnsureWeaponSlotEquipped().PrimaryWeapon!;
-    }
-
-    private WeaponSlotState EnsureWeaponSlotEquipped()
-    {
-        var slot = GetWeaponSlot();
-        slot.EnsureWeaponEquipped(WeaponState.CreateBrokenSword());
-        return slot;
-    }
-
-    private WeaponSlotState GetWeaponSlot()
-    {
-        return Owner.GetWeaponSlot();
-    }
+    [SavedProperty] public int SavedSecondaryWeaponUpgradeCount { get; set; }
 
     public void SyncSavedWeaponFromPlayerSlot(Player player)
     {
@@ -211,6 +108,106 @@ public class BrokenSword : MoeSumikaRelic, IWeaponSlotSaveCarrier
             (WeaponKind)SavedSecondaryWeaponKind,
             SavedSecondaryWeaponLevel,
             SavedSecondaryWeaponUpgradeCount));
+    }
+
+    public override async Task AfterObtained()
+    {
+        EnsureWeaponEquipped();
+        await base.AfterObtained();
+    }
+
+    public override Task BeforeCombatStart()
+    {
+        var slot = EnsureWeaponSlotEquipped();
+        return WeaponEffects.BeforeCombatStart(slot, Owner);
+    }
+
+    public override async Task AfterRoomEntered(AbstractRoom room)
+    {
+        var slot = EnsureWeaponSlotEquipped();
+        await WeaponEffects.AfterRoomEntered(slot, Owner, room);
+    }
+
+    public override Task AfterSideTurnStart(CombatSide side, ICombatState combatState)
+    {
+        var slot = EnsureWeaponSlotEquipped();
+        return WeaponEffects.AfterSideTurnStart(slot, Owner, side, combatState);
+    }
+
+    public override Task BeforeCardPlayed(CardPlay cardPlay)
+    {
+        var slot = EnsureWeaponSlotEquipped();
+        return WeaponEffects.BeforeCardPlayed(slot, Owner, cardPlay);
+    }
+
+    public override Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    {
+        var slot = EnsureWeaponSlotEquipped();
+        return WeaponEffects.AfterCardPlayed(slot, Owner, choiceContext, cardPlay);
+    }
+
+    public override Task BeforeTurnEnd(PlayerChoiceContext choiceContext, CombatSide side)
+    {
+        var slot = EnsureWeaponSlotEquipped();
+        return WeaponEffects.BeforeTurnEnd(slot, Owner, choiceContext, side);
+    }
+
+    public override bool TryModifyCardRewardAlternatives(
+        Player player,
+        CardReward cardReward,
+        List<CardRewardAlternative> alternatives)
+    {
+        if (!ReferenceEquals(player, Owner))
+            return false;
+
+        EnsureWeaponEquipped();
+
+        alternatives.Add(new CardRewardAlternative(
+            DraftWeaponAlternativeId,
+            DraftWeapon,
+            PostAlternateCardRewardAction.EndSelectionAndCompleteReward));
+
+        alternatives.Add(new CardRewardAlternative(
+            UpgradeWeaponAlternativeId,
+            UpgradeWeapon,
+            PostAlternateCardRewardAction.EndSelectionAndCompleteReward));
+
+        return true;
+    }
+
+    private Task DraftWeapon()
+    {
+        var slot = GetWeaponSlot();
+        slot.EnsureWeaponEquipped(WeaponState.CreateBrokenSword());
+
+        // TODO: Generate weapon choices, show a keep/discard selection UI, and call slot.EquipWeapon
+        // if the player keeps one. For now, this is intentionally a no-op placeholder.
+        return Task.CompletedTask;
+    }
+
+    private Task UpgradeWeapon()
+    {
+        var slot = GetWeaponSlot();
+        slot.EnsureWeaponEquipped(WeaponState.CreateBrokenSword());
+        slot.UpgradeCurrentWeapon();
+        return Task.CompletedTask;
+    }
+
+    private WeaponState EnsureWeaponEquipped()
+    {
+        return EnsureWeaponSlotEquipped().PrimaryWeapon!;
+    }
+
+    private WeaponSlotState EnsureWeaponSlotEquipped()
+    {
+        var slot = GetWeaponSlot();
+        slot.EnsureWeaponEquipped(WeaponState.CreateBrokenSword());
+        return slot;
+    }
+
+    private WeaponSlotState GetWeaponSlot()
+    {
+        return Owner.GetWeaponSlot();
     }
 
     private void ClearSavedSecondaryWeapon()

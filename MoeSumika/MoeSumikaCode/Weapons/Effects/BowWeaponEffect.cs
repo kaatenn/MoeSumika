@@ -1,12 +1,13 @@
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
 namespace MoeSumika.MoeSumikaCode.Weapons.Effects;
 
 public sealed class BowWeaponEffect : WeaponEffect
 {
-    public override Task BeforeCardPlayed(WeaponState weapon, CardPlay cardPlay)
+    public override Task BeforeCardPlayed(WeaponState weapon, Player player, CardPlay cardPlay)
     {
         if (cardPlay.Card.Type == CardType.Attack)
         {
@@ -17,13 +18,21 @@ public sealed class BowWeaponEffect : WeaponEffect
         return Task.CompletedTask;
     }
 
-    public override Task AfterCardPlayed(WeaponState weapon, PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    public override Task AfterCardPlayed(
+        WeaponState weapon,
+        Player player,
+        PlayerChoiceContext choiceContext,
+        CardPlay cardPlay)
     {
         // TODO: Track attack cards for delayed bow playback if the play was not cancelled earlier.
         return Task.CompletedTask;
     }
 
-    public override Task BeforeTurnEnd(WeaponState weapon, PlayerChoiceContext choiceContext, CombatSide side)
+    public override Task BeforeTurnEnd(
+        WeaponState weapon,
+        Player player,
+        PlayerChoiceContext choiceContext,
+        CombatSide side)
     {
         // TODO: Randomly choose valid enemies and autoplay delayed bow attacks here.
         return Task.CompletedTask;

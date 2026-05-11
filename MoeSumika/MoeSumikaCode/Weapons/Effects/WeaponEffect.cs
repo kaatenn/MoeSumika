@@ -2,12 +2,18 @@ using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Rooms;
 
 namespace MoeSumika.MoeSumikaCode.Weapons.Effects;
 
 public abstract class WeaponEffect : IWeaponEffect
 {
     public virtual Task BeforeCombatStart(WeaponState weapon, Player player)
+    {
+        return Task.CompletedTask;
+    }
+
+    public virtual Task AfterRoomEntered(WeaponState weapon, Player player, AbstractRoom room)
     {
         return Task.CompletedTask;
     }
@@ -21,17 +27,25 @@ public abstract class WeaponEffect : IWeaponEffect
         return Task.CompletedTask;
     }
 
-    public virtual Task BeforeCardPlayed(WeaponState weapon, CardPlay cardPlay)
+    public virtual Task BeforeCardPlayed(WeaponState weapon, Player player, CardPlay cardPlay)
     {
         return Task.CompletedTask;
     }
 
-    public virtual Task AfterCardPlayed(WeaponState weapon, PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    public virtual Task AfterCardPlayed(
+        WeaponState weapon,
+        Player player,
+        PlayerChoiceContext choiceContext,
+        CardPlay cardPlay)
     {
         return Task.CompletedTask;
     }
 
-    public virtual Task BeforeTurnEnd(WeaponState weapon, PlayerChoiceContext choiceContext, CombatSide side)
+    public virtual Task BeforeTurnEnd(
+        WeaponState weapon,
+        Player player,
+        PlayerChoiceContext choiceContext,
+        CombatSide side)
     {
         return Task.CompletedTask;
     }

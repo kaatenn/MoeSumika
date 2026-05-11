@@ -80,7 +80,8 @@ public sealed class PlayerWeaponSnapshot
 
     public string ToDebugString()
     {
-        return $"Player {PlayerId} weapons: primary={PrimaryWeapon?.ToDebugString() ?? "none"} secondary={SecondaryWeapon?.ToDebugString() ?? "none"}";
+        return
+            $"Player {PlayerId} weapons: primary={PrimaryWeapon?.ToDebugString() ?? "none"} secondary={SecondaryWeapon?.ToDebugString() ?? "none"}";
     }
 
     private static void WriteWeapon(PacketWriter writer, WeaponSnapshot? weapon)

@@ -1,0 +1,8 @@
+{
+  "GENSOUNOTABIBITO-WEAPON_BAG_RELIC.description": "Equip weapons. Card rewards can later be replaced with weapon drafting or weapon upgrades.\n[gold]Primary Weapon[/gold]: {PrimaryWeaponName}{PrimaryWeaponLevelText}\n[gold]Secondary Weapon (unlocked only when the primary weapon is a sword weapon)[/gold]: {SecondaryWeaponName}{SecondaryWeaponLevelText}",
+  "GENSOUNOTABIBITO-WEAPON_BAG_RELIC.flavor": "Gensou Traveller. Since she's a traveller, she ought to have a backpack, right?",
+  "GENSOUNOTABIBITO-WEAPON_BAG_RELIC.title": "Weapon Bag",
+  "GENSOUNOTABIBITO-BROKEN_SWORD.weaponDescription": "[gold]Sword Weapon[/gold]. At the start of combat, gain [gold]Dramatic Entrance[/gold]. At level 2, gain [gold]Dramatic Entrance+[/gold].",
+  "GENSOUNOTABIBITO-BROKEN_SWORD.weaponTitle": "Broken Sword",
+  "GENSOUNOTABIBITO-NONE.weaponTitle": "None"
+}

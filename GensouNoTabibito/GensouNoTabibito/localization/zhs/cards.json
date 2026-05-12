@@ -1,0 +1,14 @@
+{
+  "GENSOUNOTABIBITO-STRIKE_GENSOU_NO_TABIBITO.description": "造成{Damage:diff()}点伤害。",
+  "GENSOUNOTABIBITO-STRIKE_GENSOU_NO_TABIBITO.title": "打击",
+  "GENSOUNOTABIBITO-DEFEND_GENSOU_NO_TABIBITO.description": "获得{Block:diff()}点[gold]格挡[/gold]。",
+  "GENSOUNOTABIBITO-DEFEND_GENSOU_NO_TABIBITO.title": "防御",
+  "GENSOUNOTABIBITO-PEREGRIN_PATH.description": "获得{DexterityPower:diff()}点[gold]敏捷[/gold]。受到未被[gold]格挡[/gold]的伤害时，该回合减少 2 点[gold]敏捷[/gold]。",
+  "GENSOUNOTABIBITO-PEREGRIN_PATH.title": "旅者之路",
+  "GENSOUNOTABIBITO-REGROUP.description": "获得{Block:diff()}点[gold]格挡[/gold]。获得{PlatingPower:diff()}层[gold]覆甲[/gold]。",
+  "GENSOUNOTABIBITO-REGROUP.title": "整顿",
+  "GENSOUNOTABIBITO-DIN_IN.description": "获得{Block:diff()}点[gold]格挡[/gold]。获得{PlatingPower:diff()}层[gold]覆甲[/gold]。抽{Cards:diff()}张牌。",
+  "GENSOUNOTABIBITO-DIN_IN.title": "堂食",
+  "GENSOUNOTABIBITO-SWORD_ART_WINDREND.description": "获得{Block:diff()}点[gold]格挡[/gold]。下{BlurPower:diff()}回合开始时，[gold]格挡[/gold]不会消失。",
+  "GENSOUNOTABIBITO-SWORD_ART_WINDREND.title": "剑技·断风"
+}

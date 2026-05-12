@@ -1,0 +1,14 @@
+{
+  "GENSOUNOTABIBITO-STRIKE_GENSOU_NO_TABIBITO.description": "Deal {Damage:diff()} damage.",
+  "GENSOUNOTABIBITO-STRIKE_GENSOU_NO_TABIBITO.title": "Strike",
+  "GENSOUNOTABIBITO-DEFEND_GENSOU_NO_TABIBITO.description": "Gain {Block:diff()} [gold]Block[/gold].",
+  "GENSOUNOTABIBITO-DEFEND_GENSOU_NO_TABIBITO.title": "Defend",
+  "GENSOUNOTABIBITO-PEREGRIN_PATH.description": "Gain {DexterityPower:diff()} [gold]Dexterity[/gold]. When you take unblocked damage, lose 2 [gold]Dexterity[/gold] for this turn.",
+  "GENSOUNOTABIBITO-PEREGRIN_PATH.title": "Peregrin Path",
+  "GENSOUNOTABIBITO-REGROUP.description": "Gain {Block:diff()} [gold]Block[/gold]. Gain {PlatingPower:diff()} [gold]Plating[/gold].",
+  "GENSOUNOTABIBITO-REGROUP.title": "Regroup",
+  "GENSOUNOTABIBITO-DIN_IN.description": "Gain {Block:diff()} [gold]Block[/gold]. Gain {PlatingPower:diff()} [gold]Plating[/gold]. Draw {Cards:diff()} card.",
+  "GENSOUNOTABIBITO-DIN_IN.title": "Dine In",
+  "GENSOUNOTABIBITO-SWORD_ART_WINDREND.description": "Gain {Block:diff()} [gold]Block[/gold]. At the start of your next {BlurPower:diff()} turns, [gold]Block[/gold] is not removed.",
+  "GENSOUNOTABIBITO-SWORD_ART_WINDREND.title": "Sword Art: Windrend"
+}

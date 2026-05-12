@@ -20,7 +20,6 @@ public class WeaponBagRelic : MoeSumikaRelic, IWeaponSlotSaveCarrier
 {
     private const string DraftWeaponAlternativeId = "MOESUMIKA-DRAFT_WEAPON";
     private const string UpgradeWeaponAlternativeId = "MOESUMIKA-UPGRADE_WEAPON";
-    private const int MaxSupportedCardRewardAlternatives = 2;
 
     private const string PrimaryWeaponNameKey = "PrimaryWeaponName";
     private const string PrimaryWeaponLevelTextKey = "PrimaryWeaponLevelText";
@@ -189,9 +188,6 @@ public class WeaponBagRelic : MoeSumikaRelic, IWeaponSlotSaveCarrier
             return false;
 
         EnsureWeaponEquipped();
-
-        if (alternatives.Count >= MaxSupportedCardRewardAlternatives)
-            return false;
 
         alternatives.Add(new CardRewardAlternative(
             UpgradeWeaponAlternativeId,

@@ -8,5 +8,7 @@
   "MOESUMIKA-REGROUP.description": "获得{Block:diff()}点[gold]格挡[/gold]。获得{PlatingPower:diff()}层[gold]覆甲[/gold]。",
   "MOESUMIKA-REGROUP.title": "整顿",
   "MOESUMIKA-DIN_IN.description": "获得{Block:diff()}点[gold]格挡[/gold]。获得{PlatingPower:diff()}层[gold]覆甲[/gold]。抽{Cards:diff()}张牌。",
-  "MOESUMIKA-DIN_IN.title": "堂食"
+  "MOESUMIKA-DIN_IN.title": "堂食",
+  "MOESUMIKA-SWORD_ART_WINDREND.description": "获得{Block:diff()}点[gold]格挡[/gold]。下{BlurPower:diff()}回合开始时，[gold]格挡[/gold]不会消失。",
+  "MOESUMIKA-SWORD_ART_WINDREND.title": "剑技·断风"
 }

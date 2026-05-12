@@ -8,5 +8,7 @@
   "MOESUMIKA-REGROUP.description": "Gain {Block:diff()} [gold]Block[/gold]. Gain {PlatingPower:diff()} [gold]Plating[/gold].",
   "MOESUMIKA-REGROUP.title": "Regroup",
   "MOESUMIKA-DIN_IN.description": "Gain {Block:diff()} [gold]Block[/gold]. Gain {PlatingPower:diff()} [gold]Plating[/gold]. Draw {Cards:diff()} card.",
-  "MOESUMIKA-DIN_IN.title": "Dine In"
+  "MOESUMIKA-DIN_IN.title": "Dine In",
+  "MOESUMIKA-SWORD_ART_WINDREND.description": "Gain {Block:diff()} [gold]Block[/gold]. At the start of your next {BlurPower:diff()} turns, [gold]Block[/gold] is not removed.",
+  "MOESUMIKA-SWORD_ART_WINDREND.title": "Sword Art: Windrend"
 }

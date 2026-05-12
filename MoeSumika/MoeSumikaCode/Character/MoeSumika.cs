@@ -3,7 +3,7 @@ using BaseLib.Utils.NodeFactories;
 using Godot;
 using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.Cards;
+using MoeSumika.MoeSumikaCode.Cards;
 using MoeSumika.MoeSumikaCode.Extensions;
 using MoeSumika.MoeSumikaCode.Relics;
 
@@ -21,21 +21,19 @@ public class MoeSumika : PlaceholderCharacterModel
 
     public override IEnumerable<CardModel> StartingDeck =>
     [
-        ModelDb.Card<StrikeIronclad>(),
-        ModelDb.Card<StrikeIronclad>(),
-        ModelDb.Card<StrikeIronclad>(),
-        ModelDb.Card<StrikeIronclad>(),
-        ModelDb.Card<StrikeIronclad>(),
-        ModelDb.Card<DefendIronclad>(),
-        ModelDb.Card<DefendIronclad>(),
-        ModelDb.Card<DefendIronclad>(),
-        ModelDb.Card<DefendIronclad>(),
-        ModelDb.Card<DefendIronclad>()
+        ModelDb.Card<StrikeMoeSumika>(),
+        ModelDb.Card<StrikeMoeSumika>(),
+        ModelDb.Card<StrikeMoeSumika>(),
+        ModelDb.Card<StrikeMoeSumika>(),
+        ModelDb.Card<DefendMoeSumika>(),
+        ModelDb.Card<DefendMoeSumika>(),
+        ModelDb.Card<DefendMoeSumika>(),
+        ModelDb.Card<DefendMoeSumika>()
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics =>
     [
-        ModelDb.Relic<BrokenSwordRelic>()
+        ModelDb.Relic<WeaponBagRelic>()
     ];
 
     public override CardPoolModel CardPool => ModelDb.CardPool<MoeSumikaCardPool>();

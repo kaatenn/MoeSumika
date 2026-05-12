@@ -1,2 +1,6 @@
 {
+  "MOESUMIKA-STRIKE_MOE_SUMIKA.description": "Deal {Damage:diff()} damage.",
+  "MOESUMIKA-STRIKE_MOE_SUMIKA.title": "Strike",
+  "MOESUMIKA-DEFEND_MOE_SUMIKA.description": "Gain {Block:diff()} [gold]Block[/gold].",
+  "MOESUMIKA-DEFEND_MOE_SUMIKA.title": "Defend"
 }

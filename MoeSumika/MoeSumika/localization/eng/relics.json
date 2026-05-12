@@ -1,5 +1,5 @@
 {
-  "MOESUMIKA-BROKEN_SWORD_RELIC.description": "Starts with a Broken Sword in your weapon slot. Card rewards can later be replaced with weapon drafting or weapon upgrades.",
-  "MOESUMIKA-BROKEN_SWORD_RELIC.flavor": "It is barely a blade, but it is still yours.",
-  "MOESUMIKA-BROKEN_SWORD_RELIC.title": "Broken Sword"
+  "MOESUMIKA-WEAPON_BAG_RELIC.description": "Carries your weapon slot state and starts each run with a Broken Sword equipped. Card rewards can later be replaced with weapon drafting or weapon upgrades.",
+  "MOESUMIKA-WEAPON_BAG_RELIC.flavor": "A small kit for tools that are too important to leave behind.",
+  "MOESUMIKA-WEAPON_BAG_RELIC.title": "Weapon Bag"
 }

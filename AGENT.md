@@ -63,11 +63,11 @@ Important files:
 - `MoeSumikaCode/Weapons/Behaviors/Sword/BrokenSwordBehavior.cs`
 - `MoeSumikaCode/Weapons/Behaviors/Staff/StaffBehavior.cs`
 - `MoeSumikaCode/Weapons/Behaviors/Bow/BowBehavior.cs`
-- `MoeSumikaCode/Relics/BrokenSwordRelic.cs`
+- `MoeSumikaCode/Relics/WeaponBagRelic.cs`
 
-`BrokenSwordRelic` is the current example carrier:
+`WeaponBagRelic` is the current starter weapon-slot carrier:
 
-- Ensures the player has a broken sword equipped.
+- Ensures the player has a broken sword equipped by default.
 - Receives relic/game hooks.
 - Gets the owner's `WeaponSlotState`.
 - Delegates to `WeaponBehaviorRegistry`.

@@ -1,2 +1,6 @@
 {
+  "MOESUMIKA-STRIKE_MOE_SUMIKA.description": "造成{Damage:diff()}点伤害。",
+  "MOESUMIKA-STRIKE_MOE_SUMIKA.title": "打击",
+  "MOESUMIKA-DEFEND_MOE_SUMIKA.description": "获得{Block:diff()}点[gold]格挡[/gold]。",
+  "MOESUMIKA-DEFEND_MOE_SUMIKA.title": "防御"
 }

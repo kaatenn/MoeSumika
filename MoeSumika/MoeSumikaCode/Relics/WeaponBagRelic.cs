@@ -13,7 +13,7 @@ using MoeSumika.MoeSumikaCode.Weapons;
 
 namespace MoeSumika.MoeSumikaCode.Relics;
 
-public class BrokenSwordRelic : MoeSumikaRelic, IWeaponSlotSaveCarrier
+public class WeaponBagRelic : MoeSumikaRelic, IWeaponSlotSaveCarrier
 {
     private const string DraftWeaponAlternativeId = "MOESUMIKA-DRAFT_WEAPON";
     private const string UpgradeWeaponAlternativeId = "MOESUMIKA-UPGRADE_WEAPON";
@@ -21,8 +21,8 @@ public class BrokenSwordRelic : MoeSumikaRelic, IWeaponSlotSaveCarrier
     public override RelicRarity Rarity => RelicRarity.Starter;
     public override bool ShouldReceiveCombatHooks => true;
 
-    // TODO: Replace the placeholder relic image files with broken_sword.png,
-    // broken_sword_outline.png, and big/broken_sword.png.
+    // TODO: Replace the placeholder relic image files with weapon_bag.png,
+    // weapon_bag_outline.png, and big/weapon_bag.png.
     public override string PackedIconPath => "relic.png".RelicImagePath();
     protected override string PackedIconOutlinePath => "relic_outline.png".RelicImagePath();
     protected override string BigIconPath => "relic.png".BigRelicImagePath();

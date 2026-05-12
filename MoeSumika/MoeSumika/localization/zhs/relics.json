@@ -1,5 +1,5 @@
 {
-  "MOESUMIKA-BROKEN_SWORD.description": "",
-  "MOESUMIKA-BROKEN_SWORD.flavor": "",
-  "MOESUMIKA-BROKEN_SWORD.title": "破刀"
+  "MOESUMIKA-WEAPON_BAG_RELIC.description": "承载你的武器槽状态，并在每局开始时装备一把破刀。之后的卡牌奖励可以被替换为武器选择或武器升级。",
+  "MOESUMIKA-WEAPON_BAG_RELIC.flavor": "用来收纳那些不能落下的家伙。",
+  "MOESUMIKA-WEAPON_BAG_RELIC.title": "武器背包"
 }

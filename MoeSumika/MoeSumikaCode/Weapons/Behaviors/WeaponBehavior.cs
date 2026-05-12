@@ -2,6 +2,7 @@ using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Rooms;
 
 namespace MoeSumika.MoeSumikaCode.Weapons;
@@ -48,5 +49,13 @@ public abstract class WeaponBehavior : IWeaponBehavior
         CombatSide side)
     {
         return Task.CompletedTask;
+    }
+
+    public virtual IEnumerable<IHoverTip> GetHoverTips(WeaponState weapon)
+    {
+        var title = WeaponLocalization.GetTitleLocString(weapon);
+        var description = WeaponLocalization.GetDescriptionLocString(weapon);
+        if (title != null && description != null && !description.IsEmpty)
+            yield return new HoverTip(title, description);
     }
 }

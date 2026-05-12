@@ -3,12 +3,10 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Factories;
-using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Nodes.CommonUi;
-using MegaCrit.Sts2.Core.Rooms;
-using MoeSumika.MoeSumikaCode.Powers;
 
 namespace MoeSumika.MoeSumikaCode.Weapons.Behaviors.Sword;
 
@@ -24,16 +22,6 @@ public sealed class BrokenSwordBehavior : SwordBehavior
             return;
 
         await GiveDramaticEntrance(weapon, player);
-    }
-
-    public override async Task AfterRoomEntered(WeaponState weapon, Player player, AbstractRoom room)
-    {
-        if (room is not CombatRoom)
-        {
-            return;
-        }
-
-        await GiveSwordSkill(player);
     }
 
     private async Task GiveDramaticEntrance(WeaponState weapon, Player player)
@@ -55,13 +43,11 @@ public sealed class BrokenSwordBehavior : SwordBehavior
             CardPilePosition.Top);
     }
 
-    private async Task GiveSwordSkill(Player player)
+    public override IEnumerable<IHoverTip> GetHoverTips(WeaponState weapon)
     {
-        await PowerCmd.Apply<SwordSkill>(
-            new ThrowingPlayerChoiceContext(),
-            player.Creature,
-            5,
-            player.Creature,
-            null);
+        foreach (var tip in base.GetHoverTips(weapon))
+            yield return tip;
+
+        yield return HoverTipFactory.FromCard<DramaticEntrance>(weapon.Level >= 2);
     }
 }

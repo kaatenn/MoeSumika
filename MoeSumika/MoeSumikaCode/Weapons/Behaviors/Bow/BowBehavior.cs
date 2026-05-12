@@ -2,6 +2,8 @@ using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
+using MoeSumika.MoeSumikaCode.Keywords;
 
 namespace MoeSumika.MoeSumikaCode.Weapons.Behaviors.Bow;
 
@@ -36,5 +38,13 @@ public sealed class BowBehavior : WeaponBehavior
     {
         // TODO: Randomly choose valid enemies and autoplay delayed bow attacks here.
         return Task.CompletedTask;
+    }
+
+    public override IEnumerable<IHoverTip> GetHoverTips(WeaponState weapon)
+    {
+        foreach (var tip in base.GetHoverTips(weapon))
+            yield return tip;
+
+        yield return HoverTipFactory.FromKeyword(MoeSumikaKeywords.BowWeapon);
     }
 }

@@ -1,5 +1,5 @@
 {
-  "MOESUMIKA-SWORD_SKILL.description": "",
-  "MOESUMIKA-SWORD_SKILL.smartDescription": "",
-  "MOESUMIKA-SWORD_SKILL.title": "SwordSkillLevel"
+  "MOESUMIKA-SWORD_SKILL.description": "A resource used by sword weapons and sword cards.",
+  "MOESUMIKA-SWORD_SKILL.smartDescription": "{PowerAmount} Sword Skill.",
+  "MOESUMIKA-SWORD_SKILL.title": "Sword Skill"
 }

@@ -1,2 +1,5 @@
 {
+  "MOESUMIKA-SWORD_SKILL.description": "由剑类武器和剑技卡牌使用的资源。",
+  "MOESUMIKA-SWORD_SKILL.smartDescription": "{PowerAmount}层剑技。",
+  "MOESUMIKA-SWORD_SKILL.title": "剑技"
 }

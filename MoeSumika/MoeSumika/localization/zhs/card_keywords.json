@@ -1,2 +1,8 @@
 {
+  "MOESUMIKA-BOW_WEAPON.description": "用于延迟攻击和远程攻击的武器类型。",
+  "MOESUMIKA-BOW_WEAPON.title": "弓类武器",
+  "MOESUMIKA-STAFF_WEAPON.description": "用于元素效果的武器类型。",
+  "MOESUMIKA-STAFF_WEAPON.title": "法杖类武器",
+  "MOESUMIKA-SWORD_WEAPON.description": "可以持有副武器的武器类型。战斗开始时，剑类武器给予5层[gold]剑技[/gold]。",
+  "MOESUMIKA-SWORD_WEAPON.title": "剑类武器"
 }

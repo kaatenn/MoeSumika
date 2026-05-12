@@ -2,6 +2,7 @@ using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Rooms;
 using MoeSumika.MoeSumikaCode.Weapons.Behaviors.Bow;
 using MoeSumika.MoeSumikaCode.Weapons.Behaviors.Staff;
@@ -65,6 +66,11 @@ public static class WeaponBehaviorRegistry
         CombatSide side)
     {
         return ForEach(slot, weapon => Get(weapon).BeforeTurnEnd(weapon, player, choiceContext, side));
+    }
+
+    public static IEnumerable<IHoverTip> GetHoverTips(WeaponState weapon)
+    {
+        return Get(weapon).GetHoverTips(weapon);
     }
 
     private static IWeaponBehavior Get(WeaponState weapon)

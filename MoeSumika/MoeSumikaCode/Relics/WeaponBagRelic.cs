@@ -5,10 +5,13 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.Entities.Rewards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Rewards;
 using MegaCrit.Sts2.Core.Rooms;
 using MegaCrit.Sts2.Core.Saves.Runs;
 using MoeSumika.MoeSumikaCode.Extensions;
+using MoeSumika.MoeSumikaCode.Localization;
 using MoeSumika.MoeSumikaCode.Weapons;
 
 namespace MoeSumika.MoeSumikaCode.Relics;
@@ -46,6 +49,25 @@ public class WeaponBagRelic : MoeSumikaRelic, IWeaponSlotSaveCarrier
     [SavedProperty] public int SavedSecondaryWeaponLevel { get; set; }
 
     [SavedProperty] public int SavedSecondaryWeaponUpgradeCount { get; set; }
+
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+    [
+        new StringDynamicVar("PrimaryWeaponName", () => WeaponLocalization.GetTitle(GetPrimaryWeaponForDescription())),
+        new StringDynamicVar("PrimaryWeaponLevelText", () => GetWeaponLevelText(GetPrimaryWeaponForDescription())),
+        new StringDynamicVar("SecondaryWeaponName",
+            () => WeaponLocalization.GetTitle(GetSecondaryWeaponForDescription())),
+        new StringDynamicVar("SecondaryWeaponLevelText", () => GetWeaponLevelText(GetSecondaryWeaponForDescription()))
+    ];
+
+    protected override IEnumerable<IHoverTip> ExtraHoverTips
+    {
+        get
+        {
+            foreach (var weapon in GetWeaponsForDescription())
+            foreach (var tip in WeaponBehaviorRegistry.GetHoverTips(weapon))
+                yield return tip;
+        }
+    }
 
     public void SyncSavedWeaponFromPlayerSlot(Player player)
     {
@@ -207,6 +229,62 @@ public class WeaponBagRelic : MoeSumikaRelic, IWeaponSlotSaveCarrier
     private WeaponSlotState GetWeaponSlot()
     {
         return Owner.GetWeaponSlot();
+    }
+
+    private WeaponState? GetPrimaryWeaponForDescription()
+    {
+        var slot = TryGetWeaponSlotForDescription();
+        if (slot?.PrimaryWeapon != null)
+            return slot.PrimaryWeapon;
+
+        return SavedHasWeapon
+            ? WeaponState.Create(
+                SavedWeaponId,
+                (WeaponKind)SavedWeaponKind,
+                SavedWeaponLevel,
+                SavedWeaponUpgradeCount)
+            : WeaponState.CreateBrokenSword();
+    }
+
+    private WeaponState? GetSecondaryWeaponForDescription()
+    {
+        var slot = TryGetWeaponSlotForDescription();
+        if (slot?.SecondaryWeapon != null)
+            return slot.SecondaryWeapon;
+
+        return SavedHasSecondaryWeapon
+            ? WeaponState.Create(
+                SavedSecondaryWeaponId,
+                (WeaponKind)SavedSecondaryWeaponKind,
+                SavedSecondaryWeaponLevel,
+                SavedSecondaryWeaponUpgradeCount)
+            : null;
+    }
+
+    private WeaponSlotState? TryGetWeaponSlotForDescription()
+    {
+        if (!IsMutable)
+            return null;
+
+        return Owner?.GetWeaponSlot();
+    }
+
+    private IEnumerable<WeaponState> GetWeaponsForDescription()
+    {
+        var primaryWeapon = GetPrimaryWeaponForDescription();
+        if (primaryWeapon != null)
+            yield return primaryWeapon;
+
+        var secondaryWeapon = GetSecondaryWeaponForDescription();
+        if (secondaryWeapon != null)
+            yield return secondaryWeapon;
+    }
+
+    private static string GetWeaponLevelText(WeaponState? weapon)
+    {
+        return weapon == null
+            ? string.Empty
+            : $" Lv. {weapon.Level}";
     }
 
     private void ClearSavedSecondaryWeapon()

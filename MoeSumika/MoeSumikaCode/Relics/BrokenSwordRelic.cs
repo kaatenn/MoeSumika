@@ -10,7 +10,6 @@ using MegaCrit.Sts2.Core.Rooms;
 using MegaCrit.Sts2.Core.Saves.Runs;
 using MoeSumika.MoeSumikaCode.Extensions;
 using MoeSumika.MoeSumikaCode.Weapons;
-using MoeSumika.MoeSumikaCode.Weapons.Effects;
 
 namespace MoeSumika.MoeSumikaCode.Relics;
 
@@ -119,37 +118,37 @@ public class BrokenSwordRelic : MoeSumikaRelic, IWeaponSlotSaveCarrier
     public override Task BeforeCombatStart()
     {
         var slot = EnsureWeaponSlotEquipped();
-        return WeaponEffects.BeforeCombatStart(slot, Owner);
+        return WeaponBehaviorRegistry.BeforeCombatStart(slot, Owner);
     }
 
     public override async Task AfterRoomEntered(AbstractRoom room)
     {
         var slot = EnsureWeaponSlotEquipped();
-        await WeaponEffects.AfterRoomEntered(slot, Owner, room);
+        await WeaponBehaviorRegistry.AfterRoomEntered(slot, Owner, room);
     }
 
     public override Task AfterSideTurnStart(CombatSide side, ICombatState combatState)
     {
         var slot = EnsureWeaponSlotEquipped();
-        return WeaponEffects.AfterSideTurnStart(slot, Owner, side, combatState);
+        return WeaponBehaviorRegistry.AfterSideTurnStart(slot, Owner, side, combatState);
     }
 
     public override Task BeforeCardPlayed(CardPlay cardPlay)
     {
         var slot = EnsureWeaponSlotEquipped();
-        return WeaponEffects.BeforeCardPlayed(slot, Owner, cardPlay);
+        return WeaponBehaviorRegistry.BeforeCardPlayed(slot, Owner, cardPlay);
     }
 
     public override Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         var slot = EnsureWeaponSlotEquipped();
-        return WeaponEffects.AfterCardPlayed(slot, Owner, choiceContext, cardPlay);
+        return WeaponBehaviorRegistry.AfterCardPlayed(slot, Owner, choiceContext, cardPlay);
     }
 
     public override Task BeforeTurnEnd(PlayerChoiceContext choiceContext, CombatSide side)
     {
         var slot = EnsureWeaponSlotEquipped();
-        return WeaponEffects.BeforeTurnEnd(slot, Owner, choiceContext, side);
+        return WeaponBehaviorRegistry.BeforeTurnEnd(slot, Owner, choiceContext, side);
     }
 
     public override bool TryModifyCardRewardAlternatives(

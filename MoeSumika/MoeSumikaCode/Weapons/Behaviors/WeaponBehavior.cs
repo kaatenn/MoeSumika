@@ -4,9 +4,9 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Rooms;
 
-namespace MoeSumika.MoeSumikaCode.Weapons.Effects;
+namespace MoeSumika.MoeSumikaCode.Weapons;
 
-public abstract class WeaponEffect : IWeaponEffect
+public abstract class WeaponBehavior : IWeaponBehavior
 {
     public virtual Task BeforeCombatStart(WeaponState weapon, Player player)
     {

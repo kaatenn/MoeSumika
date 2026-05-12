@@ -3,23 +3,26 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Rooms;
+using MoeSumika.MoeSumikaCode.Weapons.Behaviors.Bow;
+using MoeSumika.MoeSumikaCode.Weapons.Behaviors.Staff;
+using MoeSumika.MoeSumikaCode.Weapons.Behaviors.Sword;
 
-namespace MoeSumika.MoeSumikaCode.Weapons.Effects;
+namespace MoeSumika.MoeSumikaCode.Weapons;
 
-public static class WeaponEffects
+public static class WeaponBehaviorRegistry
 {
-    private static readonly Dictionary<string, IWeaponEffect> EffectsById = new();
+    private static readonly Dictionary<string, IWeaponBehavior> BehaviorsById = new();
 
-    private static readonly Dictionary<WeaponKind, IWeaponEffect> EffectsByKind = new()
+    private static readonly Dictionary<WeaponKind, IWeaponBehavior> BehaviorsByKind = new()
     {
-        [WeaponKind.Sword] = new SwordWeaponEffect(),
-        [WeaponKind.Staff] = new StaffWeaponEffect(),
-        [WeaponKind.Bow] = new BowWeaponEffect()
+        [WeaponKind.Sword] = new SwordBehavior(),
+        [WeaponKind.Staff] = new StaffBehavior(),
+        [WeaponKind.Bow] = new BowBehavior()
     };
 
-    public static void Register(string weaponId, IWeaponEffect effect)
+    public static void Register(string weaponId, IWeaponBehavior behavior)
     {
-        EffectsById[weaponId] = effect;
+        BehaviorsById[weaponId] = behavior;
     }
 
     public static Task BeforeCombatStart(WeaponSlotState slot, Player player)
@@ -64,11 +67,11 @@ public static class WeaponEffects
         return ForEach(slot, weapon => Get(weapon).BeforeTurnEnd(weapon, player, choiceContext, side));
     }
 
-    private static IWeaponEffect Get(WeaponState weapon)
+    private static IWeaponBehavior Get(WeaponState weapon)
     {
-        return EffectsById.TryGetValue(weapon.Id, out var effect)
-            ? effect
-            : EffectsByKind[weapon.Kind];
+        return BehaviorsById.TryGetValue(weapon.Id, out var behavior)
+            ? behavior
+            : BehaviorsByKind[weapon.Kind];
     }
 
     private static async Task ForEach(WeaponSlotState slot, Func<WeaponState, Task> action)

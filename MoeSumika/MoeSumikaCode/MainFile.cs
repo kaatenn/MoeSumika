@@ -2,7 +2,8 @@ using Godot;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Modding;
-using MoeSumika.MoeSumikaCode.Weapons.Effects;
+using MoeSumika.MoeSumikaCode.Weapons;
+using MoeSumika.MoeSumikaCode.Weapons.Behaviors.Sword;
 using Logger = MegaCrit.Sts2.Core.Logging.Logger;
 
 namespace MoeSumika.MoeSumikaCode;
@@ -21,6 +22,6 @@ public partial class MainFile : Node
         Harmony harmony = new(ModId);
 
         harmony.PatchAll();
-        WeaponEffects.Register("MOESUMIKA-BROKEN_SWORD", new BrokenSwordWeaponEffect());
+        WeaponBehaviorRegistry.Register("MOESUMIKA-BROKEN_SWORD", new BrokenSwordBehavior());
     }
 }

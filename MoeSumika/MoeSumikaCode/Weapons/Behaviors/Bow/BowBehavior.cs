@@ -3,9 +3,9 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
-namespace MoeSumika.MoeSumikaCode.Weapons.Effects;
+namespace MoeSumika.MoeSumikaCode.Weapons.Behaviors.Bow;
 
-public sealed class BowWeaponEffect : WeaponEffect
+public sealed class BowBehavior : WeaponBehavior
 {
     public override Task BeforeCardPlayed(WeaponState weapon, Player player, CardPlay cardPlay)
     {

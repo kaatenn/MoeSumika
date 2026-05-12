@@ -2,9 +2,9 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
-namespace MoeSumika.MoeSumikaCode.Weapons.Effects;
+namespace MoeSumika.MoeSumikaCode.Weapons.Behaviors.Staff;
 
-public sealed class StaffWeaponEffect : WeaponEffect
+public sealed class StaffBehavior : WeaponBehavior
 {
     public override Task AfterCardPlayed(
         WeaponState weapon,

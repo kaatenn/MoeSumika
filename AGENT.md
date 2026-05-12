@@ -42,7 +42,7 @@ Notes from this environment:
 
 - Keep C# nullable-aware; the project has `<Nullable>enable</Nullable>`.
 - Prefer existing BaseLib and StS2 APIs over new infrastructure.
-- Keep gameplay wiring close to the owning model: relics receive game hooks, then delegate to weapon/effect services.
+- Keep gameplay wiring close to the owning model: relics receive game hooks, then delegate to weapon behavior services.
 - Do not rewrite generated `.uid`, `.import`, `.godot`, or asset metadata files unless the task explicitly requires it.
 - The working tree may contain user edits. Do not revert unrelated changes.
 
@@ -53,10 +53,16 @@ Important files:
 - `MoeSumikaCode/Weapons/WeaponState.cs`
 - `MoeSumikaCode/Weapons/WeaponSlotState.cs`
 - `MoeSumikaCode/Weapons/WeaponSlots.cs`
-- `MoeSumikaCode/Weapons/WeaponSaveSync.cs`
-- `MoeSumikaCode/Weapons/Effects/IWeaponEffect.cs`
-- `MoeSumikaCode/Weapons/Effects/WeaponEffect.cs`
-- `MoeSumikaCode/Weapons/Effects/WeaponEffects.cs`
+- `MoeSumikaCode/Weapons/Sync/WeaponSaveSync.cs`
+- `MoeSumikaCode/Weapons/Sync/IWeaponSlotSaveCarrier.cs`
+- `MoeSumikaCode/Weapons/Sync/WeaponNetworkState.cs`
+- `MoeSumikaCode/Weapons/Behaviors/IWeaponBehavior.cs`
+- `MoeSumikaCode/Weapons/Behaviors/WeaponBehavior.cs`
+- `MoeSumikaCode/Weapons/Behaviors/WeaponBehaviorRegistry.cs`
+- `MoeSumikaCode/Weapons/Behaviors/Sword/SwordBehavior.cs`
+- `MoeSumikaCode/Weapons/Behaviors/Sword/BrokenSwordBehavior.cs`
+- `MoeSumikaCode/Weapons/Behaviors/Staff/StaffBehavior.cs`
+- `MoeSumikaCode/Weapons/Behaviors/Bow/BowBehavior.cs`
 - `MoeSumikaCode/Relics/BrokenSwordRelic.cs`
 
 `BrokenSwordRelic` is the current example carrier:
@@ -64,12 +70,12 @@ Important files:
 - Ensures the player has a broken sword equipped.
 - Receives relic/game hooks.
 - Gets the owner's `WeaponSlotState`.
-- Delegates to `WeaponEffects`.
+- Delegates to `WeaponBehaviorRegistry`.
 - Carries saved weapon-slot state through `[SavedProperty]`.
 
-## Weapon Effect Hook Pattern
+## Weapon Behavior Hook Pattern
 
-`IWeaponEffect` hooks should receive enough context to perform real gameplay actions. In particular, pass `Player player` through hooks so effects can apply powers or use `player.Creature` as source/target.
+`IWeaponBehavior` hooks should receive enough context to perform real gameplay actions. In particular, pass `Player player` through hooks so behaviors can apply powers or use `player.Creature` as source/target.
 
 Current pattern:
 
@@ -88,6 +94,14 @@ new ThrowingPlayerChoiceContext()
 
 This matches vanilla-style relic code such as room-entry power application.
 
+## Adding New Weapons
+
+To add a new weapon:
+
+1. Create a new `XXXBehavior` class in the appropriate `Behaviors/{WeaponKind}/` subfolder, extending `WeaponBehavior` (or a more specific subclass like `SwordBehavior`).
+2. If the weapon uses a custom ID, register it in `WeaponBehaviorRegistry.BehaviorsById` via `Register(id, behavior)`.
+3. If it is the default for a new `WeaponKind`, add it to `BehaviorsByKind`.
+
 ## Applying Powers
 
 Use `PowerCmd.Apply<TPower>` for powers. For player self-buffs, the usual shape is:
@@ -101,7 +115,7 @@ await PowerCmd.Apply<MyPower>(
     null);
 ```
 
-Example already implemented: `BrokenSwordWeaponEffect.AfterRoomEntered` checks for `CombatRoom` and applies 5 stacks of `SwordSkill` to the player.
+Example already implemented: `BrokenSwordBehavior.AfterRoomEntered` checks for `CombatRoom` and applies 5 stacks of `SwordSkill` to the player.
 
 ## Common Pitfalls
 
@@ -109,10 +123,8 @@ Example already implemented: `BrokenSwordWeaponEffect.AfterRoomEntered` checks f
 - `CombatRoom` is also under the room namespace.
 - `PlayerChoiceContext`/`ThrowingPlayerChoiceContext` are under `MegaCrit.Sts2.Core.GameActions.Multiplayer`.
 - `PowerCmd` is under `MegaCrit.Sts2.Core.Commands`.
-- The repo previously used/contains a rename from `BrokenSword.cs` to `BrokenSwordRelic.cs`; use the current file/class names in the working tree.
-- If a hook signature is changed in `IWeaponEffect`, update all of:
-  - `WeaponEffect`
-  - `WeaponEffects`
-  - every concrete effect
-  - every relic or caller that dispatches to `WeaponEffects`
-
+- If a hook signature is changed in `IWeaponBehavior`, update all of:
+  - `WeaponBehavior`
+  - `WeaponBehaviorRegistry`
+  - every concrete behavior
+  - every relic or caller that dispatches to `WeaponBehaviorRegistry`

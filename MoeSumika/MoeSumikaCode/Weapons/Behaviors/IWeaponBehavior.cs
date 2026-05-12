@@ -4,9 +4,9 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Rooms;
 
-namespace MoeSumika.MoeSumikaCode.Weapons.Effects;
+namespace MoeSumika.MoeSumikaCode.Weapons;
 
-public interface IWeaponEffect
+public interface IWeaponBehavior
 {
     Task BeforeCombatStart(WeaponState weapon, Player player);
     Task AfterRoomEntered(WeaponState weapon, Player player, AbstractRoom room);

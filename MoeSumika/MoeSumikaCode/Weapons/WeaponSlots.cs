@@ -7,6 +7,11 @@ public static class WeaponSlots
 {
     private static readonly ConditionalWeakTable<Player, WeaponSlotState> Slots = new();
 
+    public static WeaponSlotState GetWeaponSlot(this Player player)
+    {
+        return Get(player);
+    }
+
     public static WeaponSlotState Get(Player player)
     {
         return Slots.GetValue(player, static _ => new WeaponSlotState());

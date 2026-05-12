@@ -10,9 +10,9 @@ using MegaCrit.Sts2.Core.Nodes.CommonUi;
 using MegaCrit.Sts2.Core.Rooms;
 using MoeSumika.MoeSumikaCode.Powers;
 
-namespace MoeSumika.MoeSumikaCode.Weapons.Effects;
+namespace MoeSumika.MoeSumikaCode.Weapons.Behaviors.Sword;
 
-public sealed class BrokenSwordWeaponEffect : SwordWeaponEffect
+public sealed class BrokenSwordBehavior : SwordBehavior
 {
     public override async Task AfterSideTurnStart(
         WeaponState weapon,

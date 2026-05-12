@@ -2,9 +2,9 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
-namespace MoeSumika.MoeSumikaCode.Weapons.Effects;
+namespace MoeSumika.MoeSumikaCode.Weapons.Behaviors.Sword;
 
-public class SwordWeaponEffect : WeaponEffect
+public class SwordBehavior : WeaponBehavior
 {
     public override Task AfterCardPlayed(
         WeaponState weapon,

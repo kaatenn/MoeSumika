@@ -1,8 +1,0 @@
-{
-  "MOESUMIKA-BOW_WEAPON.description": "A weapon type for delayed and ranged attacks.",
-  "MOESUMIKA-BOW_WEAPON.title": "Bow Weapon",
-  "MOESUMIKA-STAFF_WEAPON.description": "A weapon type for elemental effects.",
-  "MOESUMIKA-STAFF_WEAPON.title": "Staff Weapon",
-  "MOESUMIKA-SWORD_WEAPON.description": "A weapon type that can hold a secondary weapon. At the start of combat, sword weapons grant 5 [gold]Sword Skill[/gold].",
-  "MOESUMIKA-SWORD_WEAPON.title": "Sword Weapon"
-}

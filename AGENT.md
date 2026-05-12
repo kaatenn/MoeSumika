@@ -4,11 +4,11 @@
 
 This repository is a Slay the Spire 2 mod built as a Godot/.NET project.
 
-- Solution: `MoeSumika.sln`
-- Main project: `MoeSumika/MoeSumika.csproj`
-- C# source: `MoeSumika/MoeSumikaCode/`
-- Godot/assets/localization: `MoeSumika/MoeSumika/`
-- Mod manifest: `MoeSumika/MoeSumika.json`
+- Solution: `GensouNoTabibito.sln`
+- Main project: `GensouNoTabibito/GensouNoTabibito.csproj`
+- C# source: `GensouNoTabibito/GensouNoTabibitoCode/`
+- Godot/assets/localization: `GensouNoTabibito/GensouNoTabibito/`
+- Mod manifest: `GensouNoTabibito/GensouNoTabibito.json`
 
 The project currently contains a custom character, cards, relics, powers, and a weapon-slot system. The weapon-slot state is player-owned and persisted through the starter relic carrier.
 
@@ -17,7 +17,7 @@ The project currently contains a custom character, cards, relics, powers, and a 
 Prefer building the project after C# changes:
 
 ```powershell
-& 'C:\Program Files\dotnet\dotnet.exe' build MoeSumika\MoeSumika.csproj --no-restore
+& 'C:\Program Files\dotnet\dotnet.exe' build GensouNoTabibito\GensouNoTabibito.csproj --no-restore
 ```
 
 Notes from this environment:
@@ -30,13 +30,15 @@ Notes from this environment:
 
 ## Dependency Paths
 
-`MoeSumika/Sts2PathDiscovery.props` attempts to discover the Slay the Spire 2 install and defines:
+`GensouNoTabibito/Sts2PathDiscovery.props` attempts to discover the Slay the Spire 2 install and defines:
 
 - `Sts2Path`
 - `Sts2DataDir`
 - `ModsPath`
 
-`MoeSumika/Directory.Build.props` defines the local Godot/MegaDot path. If build or publish fails because Godot or StS2 cannot be found, inspect these props files first.
+`GensouNoTabibito/Directory.Build.props` defines the local Godot/MegaDot path. If build or publish fails because Godot or StS2 cannot be found, inspect these props files first.
+
+`Directory.Build.props` is intentionally ignored by `GensouNoTabibito/.gitignore`, so treat it as local machine configuration.
 
 ## Code Conventions
 
@@ -48,16 +50,19 @@ Notes from this environment:
 
 ## Cards, Powers, And Reward UI
 
-Card model files live under `MoeSumikaCode/Cards/`. Current custom-card work includes:
+Card model files live under `GensouNoTabibitoCode/Cards/`. Current custom-card work includes:
 
-- `MoeSumikaCode/Cards/DinIn.cs`
-- `MoeSumikaCode/Cards/PeregrinPath.cs`
-- `MoeSumikaCode/Cards/Regroup.cs`
+- `GensouNoTabibitoCode/Cards/DinIn.cs`
+- `GensouNoTabibitoCode/Cards/PeregrinPath.cs`
+- `GensouNoTabibitoCode/Cards/Regroup.cs`
+- `GensouNoTabibitoCode/Cards/SwordArtWindrend.cs`
 
-Power model files live under `MoeSumikaCode/Powers/`. Current Peregrin Path power work includes:
+Power model files live under `GensouNoTabibitoCode/Powers/`. Current Peregrin Path power work includes:
 
-- `MoeSumikaCode/Powers/PeregrinPathPower.cs`
-- `MoeSumikaCode/Powers/PeregrinPathTempDexLoss.cs`
+- `GensouNoTabibitoCode/Powers/PeregrinPathPower.cs`
+- `GensouNoTabibitoCode/Powers/PeregrinPathTempDexLoss.cs`
+
+The shared sword resource power lives in `GensouNoTabibitoCode/Powers/SwordSkill.cs`.
 
 For temporary stat-down powers like `PeregrinPathTempDexLoss`, prefer BaseLib's `CustomTemporaryPowerModel` instead of hand-rolling cleanup. The temporary dexterity-loss shape is:
 
@@ -70,30 +75,30 @@ For temporary stat-down powers like `PeregrinPathTempDexLoss`, prefer BaseLib's 
 
 Card reward option localization uses `localization/{locale}/card_reward_ui.json`. Keep these option keys present for both `eng` and `zhs`:
 
-- `OPTION_MOESUMIKA-DRAFT_WEAPON.name`
-- `OPTION_MOESUMIKA-UPGRADE_WEAPON.name`
+- `OPTION_GENSOUNOTABIBITO-DRAFT_WEAPON.name`
+- `OPTION_GENSOUNOTABIBITO-UPGRADE_WEAPON.name`
 
 ## Weapon Slot Architecture
 
 Important files:
 
-- `MoeSumikaCode/Weapons/WeaponState.cs`
-- `MoeSumikaCode/Weapons/WeaponSlotState.cs`
-- `MoeSumikaCode/Weapons/WeaponSlots.cs`
-- `MoeSumikaCode/Weapons/WeaponLocalization.cs`
-- `MoeSumikaCode/Weapons/Sync/WeaponSaveSync.cs`
-- `MoeSumikaCode/Weapons/Sync/IWeaponSlotSaveCarrier.cs`
-- `MoeSumikaCode/Weapons/Sync/WeaponNetworkState.cs`
-- `MoeSumikaCode/Weapons/Behaviors/IWeaponBehavior.cs`
-- `MoeSumikaCode/Weapons/Behaviors/WeaponBehavior.cs`
-- `MoeSumikaCode/Weapons/Behaviors/WeaponBehaviorRegistry.cs`
-- `MoeSumikaCode/Weapons/Behaviors/Sword/SwordBehavior.cs`
-- `MoeSumikaCode/Weapons/Behaviors/Sword/BrokenSwordBehavior.cs`
-- `MoeSumikaCode/Weapons/Behaviors/Staff/StaffBehavior.cs`
-- `MoeSumikaCode/Weapons/Behaviors/Bow/BowBehavior.cs`
-- `MoeSumikaCode/Keywords/MoeSumikaKeywords.cs`
-- `MoeSumikaCode/Localization/StringDynamicVar.cs`
-- `MoeSumikaCode/Relics/WeaponBagRelic.cs`
+- `GensouNoTabibitoCode/Weapons/WeaponState.cs`
+- `GensouNoTabibitoCode/Weapons/WeaponSlotState.cs`
+- `GensouNoTabibitoCode/Weapons/WeaponSlots.cs`
+- `GensouNoTabibitoCode/Weapons/WeaponLocalization.cs`
+- `GensouNoTabibitoCode/Weapons/Sync/WeaponSaveSync.cs`
+- `GensouNoTabibitoCode/Weapons/Sync/IWeaponSlotSaveCarrier.cs`
+- `GensouNoTabibitoCode/Weapons/Sync/WeaponNetworkState.cs`
+- `GensouNoTabibitoCode/Weapons/Behaviors/IWeaponBehavior.cs`
+- `GensouNoTabibitoCode/Weapons/Behaviors/WeaponBehavior.cs`
+- `GensouNoTabibitoCode/Weapons/Behaviors/WeaponBehaviorRegistry.cs`
+- `GensouNoTabibitoCode/Weapons/Behaviors/Sword/SwordBehavior.cs`
+- `GensouNoTabibitoCode/Weapons/Behaviors/Sword/BrokenSwordBehavior.cs`
+- `GensouNoTabibitoCode/Weapons/Behaviors/Staff/StaffBehavior.cs`
+- `GensouNoTabibitoCode/Weapons/Behaviors/Bow/BowBehavior.cs`
+- `GensouNoTabibitoCode/Keywords/GensouNoTabibitoKeywords.cs`
+- `GensouNoTabibitoCode/Localization/StringDynamicVar.cs`
+- `GensouNoTabibitoCode/Relics/WeaponBagRelic.cs`
 
 `WeaponBagRelic` is the current starter weapon-slot carrier:
 
@@ -107,9 +112,9 @@ Important files:
 
 Weapon localization currently lives in the `relics` localization table, not a custom `weapons` table. The game does not automatically create arbitrary localization tables, so `WeaponLocalization` reads keys like:
 
-- `MOESUMIKA-BROKEN_SWORD.weaponTitle`
-- `MOESUMIKA-BROKEN_SWORD.weaponDescription`
-- `MOESUMIKA-NONE.weaponTitle`
+- `GENSOUNOTABIBITO-BROKEN_SWORD.weaponTitle`
+- `GENSOUNOTABIBITO-BROKEN_SWORD.weaponDescription`
+- `GENSOUNOTABIBITO-NONE.weaponTitle`
 
 ## Weapon Behavior Hook Pattern
 
@@ -153,13 +158,13 @@ To add a new weapon:
 4. Add `*.weaponTitle` and `*.weaponDescription` entries to `localization/eng/relics.json` and `localization/zhs/relics.json`.
 5. Put long effect explanations in the weapon hover tip via behavior/localization; keep `WeaponBagRelic.description` short enough to show only equipped weapon names and levels.
 
-Weapon-type hover tips use custom `CardKeyword` values from `MoeSumikaKeywords`:
+Weapon-type hover tips use custom `CardKeyword` values from `GensouNoTabibitoKeywords`:
 
 - `SwordWeapon`
 - `StaffWeapon`
 - `BowWeapon`
 
-Add new weapon type keywords to `MoeSumikaKeywords` and both `card_keywords.json` files. `CustomEnum` names should omit the mod prefix because BaseLib applies it automatically.
+Add new weapon type keywords to `GensouNoTabibitoKeywords` and both `card_keywords.json` files. `CustomEnum` names should omit the mod prefix because BaseLib applies it automatically.
 
 ## Applying Powers
 

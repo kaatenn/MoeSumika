@@ -1,8 +1,0 @@
-{
-  "MOESUMIKA-WEAPON_BAG_RELIC.description": "装备武器。之后的卡牌奖励可以被替换为武器选择或武器升级。\n[gold]主武器[/gold]：{PrimaryWeaponName}{PrimaryWeaponLevelText}\n[gold]副武器（仅在主武器为剑类武器时解锁）[/gold]：{SecondaryWeaponName}{SecondaryWeaponLevelText}",
-  "MOESUMIKA-WEAPON_BAG_RELIC.flavor": "幻想旅人，都是旅人了，总得有个背包不是么？",
-  "MOESUMIKA-WEAPON_BAG_RELIC.title": "武器背包",
-  "MOESUMIKA-BROKEN_SWORD.weaponDescription": "[gold]剑类武器[/gold]。战斗开始时，获得[gold]闪亮登场[/gold]。等级达到2时，获得[gold]闪亮登场+[/gold]。",
-  "MOESUMIKA-BROKEN_SWORD.weaponTitle": "破刀",
-  "MOESUMIKA-NONE.weaponTitle": "无"
-}

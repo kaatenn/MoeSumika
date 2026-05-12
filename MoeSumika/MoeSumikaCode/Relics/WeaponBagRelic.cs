@@ -20,6 +20,13 @@ public class WeaponBagRelic : MoeSumikaRelic, IWeaponSlotSaveCarrier
 {
     private const string DraftWeaponAlternativeId = "MOESUMIKA-DRAFT_WEAPON";
     private const string UpgradeWeaponAlternativeId = "MOESUMIKA-UPGRADE_WEAPON";
+    private const int MaxSupportedCardRewardAlternatives = 2;
+
+    private const string PrimaryWeaponNameKey = "PrimaryWeaponName";
+    private const string PrimaryWeaponLevelTextKey = "PrimaryWeaponLevelText";
+    private const string SecondaryWeaponNameKey = "SecondaryWeaponName";
+    private const string SecondaryWeaponLevelTextKey = "SecondaryWeaponLevelText";
+
 
     public override RelicRarity Rarity => RelicRarity.Starter;
     public override bool ShouldReceiveCombatHooks => true;
@@ -52,11 +59,11 @@ public class WeaponBagRelic : MoeSumikaRelic, IWeaponSlotSaveCarrier
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new StringDynamicVar("PrimaryWeaponName", () => WeaponLocalization.GetTitle(GetPrimaryWeaponForDescription())),
-        new StringDynamicVar("PrimaryWeaponLevelText", () => GetWeaponLevelText(GetPrimaryWeaponForDescription())),
-        new StringDynamicVar("SecondaryWeaponName",
+        new StringDynamicVar(PrimaryWeaponNameKey, () => WeaponLocalization.GetTitle(GetPrimaryWeaponForDescription())),
+        new StringDynamicVar(PrimaryWeaponLevelTextKey, () => GetWeaponLevelText(GetPrimaryWeaponForDescription())),
+        new StringDynamicVar(SecondaryWeaponNameKey,
             () => WeaponLocalization.GetTitle(GetSecondaryWeaponForDescription())),
-        new StringDynamicVar("SecondaryWeaponLevelText", () => GetWeaponLevelText(GetSecondaryWeaponForDescription()))
+        new StringDynamicVar(SecondaryWeaponLevelTextKey, () => GetWeaponLevelText(GetSecondaryWeaponForDescription()))
     ];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips
@@ -183,10 +190,8 @@ public class WeaponBagRelic : MoeSumikaRelic, IWeaponSlotSaveCarrier
 
         EnsureWeaponEquipped();
 
-        alternatives.Add(new CardRewardAlternative(
-            DraftWeaponAlternativeId,
-            DraftWeapon,
-            PostAlternateCardRewardAction.EndSelectionAndCompleteReward));
+        if (alternatives.Count >= MaxSupportedCardRewardAlternatives)
+            return false;
 
         alternatives.Add(new CardRewardAlternative(
             UpgradeWeaponAlternativeId,
@@ -211,6 +216,7 @@ public class WeaponBagRelic : MoeSumikaRelic, IWeaponSlotSaveCarrier
         var slot = GetWeaponSlot();
         slot.EnsureWeaponEquipped(WeaponState.CreateBrokenSword());
         slot.UpgradeCurrentWeapon();
+        SyncSavedWeaponFromPlayerSlot(Owner);
         return Task.CompletedTask;
     }
 

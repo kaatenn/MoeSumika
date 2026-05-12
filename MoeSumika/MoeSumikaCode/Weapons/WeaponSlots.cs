@@ -17,6 +17,6 @@ public static class WeaponSlots
         return Slots.GetValue(player, static _ => new WeaponSlotState());
     }
 
-    // TODO: Persist and restore weapon slot state with Player save data. This service deliberately
-    // models the weapon as player-owned state; save/load wiring still needs a supported API or patch.
+    // Weapon slot state is player-owned at runtime. Persistence is carried by WeaponBagRelic,
+    // which saves and restores this state through IWeaponSlotSaveCarrier.
 }

@@ -1,5 +1,11 @@
 {
-  "MOESUMIKA-SWORD_SKILL.description": "A resource used by sword weapons and sword cards.",
-  "MOESUMIKA-SWORD_SKILL.smartDescription": "{PowerAmount} Sword Skill.",
-  "MOESUMIKA-SWORD_SKILL.title": "Sword Skill"
+  "MOESUMIKA-SWORD_SKILL.description": "A resource used by [gold]Sword Weapons[/gold] and [gold]Sword Skill[/gold] cards.",
+  "MOESUMIKA-SWORD_SKILL.smartDescription": "[blue]{Amount}[/blue] [gold]Sword Skill[/gold].",
+  "MOESUMIKA-SWORD_SKILL.title": "Sword Skill",
+  "MOESUMIKA-PEREGRIN_PATH_POWER.description": "When you take unblocked damage, lose {PowerAmount} [gold]Dexterity[/gold] until end of turn.",
+  "MOESUMIKA-PEREGRIN_PATH_POWER.smartDescription": "Temporarily lose {PowerAmount} [gold]Dexterity[/gold] when hit.",
+  "MOESUMIKA-PEREGRIN_PATH_POWER.title": "Peregrin Path",
+  "MOESUMIKA-PEREGRIN_PATH_TEMP_DEX_LOSS.description": "Restore {PowerAmount} [gold]Dexterity[/gold] at end of turn.",
+  "MOESUMIKA-PEREGRIN_PATH_TEMP_DEX_LOSS.smartDescription": "Temporarily losing {PowerAmount} [gold]Dexterity[/gold]. Restored at end of turn.",
+  "MOESUMIKA-PEREGRIN_PATH_TEMP_DEX_LOSS.title": "Peregrin Path"
 }

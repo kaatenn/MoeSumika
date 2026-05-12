@@ -10,7 +10,7 @@ This repository is a Slay the Spire 2 mod built as a Godot/.NET project.
 - Godot/assets/localization: `MoeSumika/MoeSumika/`
 - Mod manifest: `MoeSumika/MoeSumika.json`
 
-The project currently contains a custom character, relics, powers, and a weapon-slot system. The weapon-slot state is player-owned and persisted through the starter relic carrier.
+The project currently contains a custom character, cards, relics, powers, and a weapon-slot system. The weapon-slot state is player-owned and persisted through the starter relic carrier.
 
 ## Build And Verification
 
@@ -45,6 +45,33 @@ Notes from this environment:
 - Keep gameplay wiring close to the owning model: relics receive game hooks, then delegate to weapon behavior services.
 - Do not rewrite generated `.uid`, `.import`, `.godot`, or asset metadata files unless the task explicitly requires it.
 - The working tree may contain user edits. Do not revert unrelated changes.
+
+## Cards, Powers, And Reward UI
+
+Card model files live under `MoeSumikaCode/Cards/`. Current custom-card work includes:
+
+- `MoeSumikaCode/Cards/DinIn.cs`
+- `MoeSumikaCode/Cards/PeregrinPath.cs`
+- `MoeSumikaCode/Cards/Regroup.cs`
+
+Power model files live under `MoeSumikaCode/Powers/`. Current Peregrin Path power work includes:
+
+- `MoeSumikaCode/Powers/PeregrinPathPower.cs`
+- `MoeSumikaCode/Powers/PeregrinPathTempDexLoss.cs`
+
+For temporary stat-down powers like `PeregrinPathTempDexLoss`, prefer BaseLib's `CustomTemporaryPowerModel` instead of hand-rolling cleanup. The temporary dexterity-loss shape is:
+
+- `InternallyAppliedPower` is `ModelDb.Power<DexterityPower>()`.
+- `OriginModel` is the source card, currently `ModelDb.Card<PeregrinPath>()`.
+- `InvertInternalPowerAmount` is `true`.
+- `ApplyPowerFunc` delegates to `PowerCmd.Apply<DexterityPower>`.
+- Reuse vanilla temporary-dexterity localization keys from the `powers` table: `TEMPORARY_DEXTERITY_DOWN.description` and `TEMPORARY_DEXTERITY_DOWN.smartDescription`.
+- Use the origin card title for the power title when the power is card-specific.
+
+Card reward option localization uses `localization/{locale}/card_reward_ui.json`. Keep these option keys present for both `eng` and `zhs`:
+
+- `OPTION_MOESUMIKA-DRAFT_WEAPON.name`
+- `OPTION_MOESUMIKA-UPGRADE_WEAPON.name`
 
 ## Weapon Slot Architecture
 

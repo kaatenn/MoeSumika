@@ -1,5 +1,11 @@
 {
-  "MOESUMIKA-SWORD_SKILL.description": "由剑类武器和剑技卡牌使用的资源。",
-  "MOESUMIKA-SWORD_SKILL.smartDescription": "{PowerAmount}层剑技。",
-  "MOESUMIKA-SWORD_SKILL.title": "剑技"
+  "MOESUMIKA-SWORD_SKILL.description": "由[gold]剑类武器[/gold]和[gold]剑技[/gold]卡牌使用的资源。",
+  "MOESUMIKA-SWORD_SKILL.smartDescription": "[blue]{Amount}[/blue]层[gold]剑技[/gold]。",
+  "MOESUMIKA-SWORD_SKILL.title": "剑技",
+  "MOESUMIKA-PEREGRIN_PATH_POWER.description": "受到未被[gold]格挡[/gold]的伤害时，失去 {PowerAmount} 点[gold]敏捷[/gold]直到回合结束。",
+  "MOESUMIKA-PEREGRIN_PATH_POWER.smartDescription": "受到伤害时暂时失去 {PowerAmount} 点[gold]敏捷[/gold]。",
+  "MOESUMIKA-PEREGRIN_PATH_POWER.title": "旅者之路",
+  "MOESUMIKA-PEREGRIN_PATH_TEMP_DEX_LOSS.description": "回合结束时恢复 {PowerAmount} 点[gold]敏捷[/gold]。",
+  "MOESUMIKA-PEREGRIN_PATH_TEMP_DEX_LOSS.smartDescription": "暂时失去 {PowerAmount} 点[gold]敏捷[/gold]，回合结束时恢复。",
+  "MOESUMIKA-PEREGRIN_PATH_TEMP_DEX_LOSS.title": "旅者之路"
 }

@@ -20,5 +20,5 @@ public class DefendMoeSumika() :
             .GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
     }
 
-    protected override void OnUpgrade() => this.DynamicVars.Block.UpgradeValueBy(3M);
+    protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3M);
 }

@@ -2,5 +2,11 @@
   "MOESUMIKA-STRIKE_MOE_SUMIKA.description": "造成{Damage:diff()}点伤害。",
   "MOESUMIKA-STRIKE_MOE_SUMIKA.title": "打击",
   "MOESUMIKA-DEFEND_MOE_SUMIKA.description": "获得{Block:diff()}点[gold]格挡[/gold]。",
-  "MOESUMIKA-DEFEND_MOE_SUMIKA.title": "防御"
+  "MOESUMIKA-DEFEND_MOE_SUMIKA.title": "防御",
+  "MOESUMIKA-PEREGRIN_PATH.description": "获得{DexterityPower:diff()}点[gold]敏捷[/gold]。受到未被[gold]格挡[/gold]的伤害时，该回合减少 2 点[gold]敏捷[/gold]。",
+  "MOESUMIKA-PEREGRIN_PATH.title": "旅者之路",
+  "MOESUMIKA-REGROUP.description": "获得{Block:diff()}点[gold]格挡[/gold]。获得{PlatingPower:diff()}层[gold]覆甲[/gold]。",
+  "MOESUMIKA-REGROUP.title": "整顿",
+  "MOESUMIKA-DIN_IN.description": "获得{Block:diff()}点[gold]格挡[/gold]。获得{PlatingPower:diff()}层[gold]覆甲[/gold]。抽{Cards:diff()}张牌。",
+  "MOESUMIKA-DIN_IN.title": "堂食"
 }

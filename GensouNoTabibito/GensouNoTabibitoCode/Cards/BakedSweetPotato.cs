@@ -1,8 +1,12 @@
+using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
 
 namespace GensouNoTabibito.GensouNoTabibitoCode.Cards;
 
@@ -42,6 +46,26 @@ public class BakedSweetPotato(): GensouNoTabibitoCard(1, CardType.Skill, CardRar
     {
         await PlayerCmd.GainEnergy(DynamicVars.Energy.IntValue, Owner);
         await Cmd.Wait(0.5f);
+        var debuffs = Owner.Creature.Powers
+            .Where(power => power.Type is PowerType.Debuff)
+            .ToList();
+
+        foreach (var debuff in debuffs)
+            await RemoveDebuff(choiceContext, (dynamic)debuff);
+    }
+
+    private async Task RemoveDebuff<TPower>(PlayerChoiceContext choiceContext, TPower debuff)
+        where TPower : PowerModel
+    {
+        if (debuff.Amount == 0)
+            return;
+
+        await PowerCmd.Apply<TPower>(
+            choiceContext,
+            Owner.Creature,
+            -debuff.Amount,
+            Owner.Creature,
+            this);
     }
 
     protected override Task OnTurnEndInHand(PlayerChoiceContext choiceContext)

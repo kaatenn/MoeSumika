@@ -10,8 +10,8 @@
   "GENSOUNOTABIBITO-PEREGRIN_PATH_TEMP_DEX_LOSS.title": "Peregrin Path",
   "GENSOUNOTABIBITO-BATTOU.title": "Battou",
   "GENSOUNOTABIBITO-BATTOU.description": "Attack damage is multiplied by [gold]1.1^X[/gold]. Requires [blue]4[/blue] [gold]Sword Skill[/gold].",
-  "GENSOUNOTABIBITO-BATTOU.smartDescription": "Attack damage becomes [blue]{1.1^PowerAmount}[/blue]x.\nRequires [blue]{RequiredSwordSkill}[/blue] [gold]Sword Skill[/gold].",
+  "GENSOUNOTABIBITO-BATTOU.smartDescription": "Attack damage becomes [blue]{Multiplier}[/blue]x.\nRequires [blue]{RequiredSwordSkill}[/blue] [gold]Sword Skill[/gold].",
   "GENSOUNOTABIBITO-IAI.title": "Iai",
   "GENSOUNOTABIBITO-IAI.description": "Block gained is multiplied by [gold]1.1^X[/gold]. Requires [blue]4[/blue] [gold]Sword Skill[/gold].",
-  "GENSOUNOTABIBITO-IAI.smartDescription": "Block gained becomes [blue]{1.1^PowerAmount}[/blue]x.\nRequires [blue]{RequiredSwordSkill}[/blue] [gold]Sword Skill[/gold]."
+  "GENSOUNOTABIBITO-IAI.smartDescription": "Block gained becomes [blue]{Multiplier}[/blue]x.\nRequires [blue]{RequiredSwordSkill}[/blue] [gold]Sword Skill[/gold]."
 }

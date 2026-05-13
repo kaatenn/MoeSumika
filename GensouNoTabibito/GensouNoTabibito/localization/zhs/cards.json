@@ -11,6 +11,8 @@
   "GENSOUNOTABIBITO-DIN_IN.title": "堂食",
   "GENSOUNOTABIBITO-SWORD_ART_WINDREND.description": "获得{Block:diff()}点[gold]格挡[/gold]。如果有敌人的意图是攻击，则保留[gold]格挡[/gold]{BlurPower:diff()}个回合。",
   "GENSOUNOTABIBITO-SWORD_ART_WINDREND.title": "剑技·断风",
-  "GENSOUNOTABIBITO-BAKED_SWEET_POTATO.description": "获得{Energy:energyIcons()}。每当此牌被[gold]保留[/gold]时，额外获得{Increase:energyIcons()}。",
-  "GENSOUNOTABIBITO-BAKED_SWEET_POTATO.title": "烤红薯"
+  "GENSOUNOTABIBITO-BAKED_SWEET_POTATO.description": "获得{Energy:energyIcons()}。\n移除自身所有[gold]负面效果[/gold]。\n每当此牌被[gold]保留[/gold]时，这张牌获得的能量增加{Increase:energyIcons()}。",
+  "GENSOUNOTABIBITO-BAKED_SWEET_POTATO.title": "烤红薯",
+  "GENSOUNOTABIBITO-SWORD_ART_KENZAKI_FUSOU.description": "造成{Damage:diff()}点伤害。\n失去{PowerAmount:diff()}层[gold]居合[/gold]。获得{PowerAmount:diff()}层[gold]拔刀[/gold]。\n每当你获得[gold]居合[/gold]时，将此牌放回你的[gold]手牌[/gold]。",
+  "GENSOUNOTABIBITO-SWORD_ART_KENZAKI_FUSOU.title": "剑技·剑咲扶桑"
 }

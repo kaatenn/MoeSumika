@@ -56,11 +56,15 @@ Card model files live under `GensouNoTabibitoCode/Cards/`. Current custom-card w
 - `GensouNoTabibitoCode/Cards/PeregrinPath.cs`
 - `GensouNoTabibitoCode/Cards/Regroup.cs`
 - `GensouNoTabibitoCode/Cards/SwordArtWindrend.cs`
+- `GensouNoTabibitoCode/Cards/BakedSweetPotato.cs`
+- `GensouNoTabibitoCode/Cards/SwordArtKenzakiFusou.cs`
 
-Power model files live under `GensouNoTabibitoCode/Powers/`. Current Peregrin Path power work includes:
+Power model files live under `GensouNoTabibitoCode/Powers/`. Current power work includes:
 
 - `GensouNoTabibitoCode/Powers/PeregrinPathPower.cs`
 - `GensouNoTabibitoCode/Powers/PeregrinPathTempDexLoss.cs`
+- `GensouNoTabibitoCode/Powers/Iai.cs`
+- `GensouNoTabibitoCode/Powers/Battou.cs`
 
 The shared sword resource power lives in `GensouNoTabibitoCode/Powers/SwordSkill.cs`.
 
@@ -136,8 +140,10 @@ public override decimal ModifyDamageMultiplicative(
         return 1m;
 
     // Return damage multiplier (1m = no change)
-    return (decimal)Math.Pow(1.1, Amount);
+    return GetMultiplier();
 }
+
+private decimal GetMultiplier() => (decimal)Math.Pow(1.1, (double)Amount);
 ```
 
 **DynamicVar access**:
@@ -148,14 +154,22 @@ public override decimal ModifyDamageMultiplicative(
 
 **Smart description format**:
 
-Follow this concise format for Power smart descriptions:
+SmartFormat placeholders are selectors, not expressions. Do not write math like `{1.1^PowerAmount}` or `{1.1^Amount}` in localization strings; `^` is invalid and will throw a localization formatting error at hover time.
 
-- English: `"[gold]Sword Skill Required[/gold] [blue]{RequiredSwordSkill}[/blue]\nAttack damage becomes [blue]{1.1^Amount}[/blue]x"`
-- Chinese: `"[gold]剑技需求[/gold] [blue]{RequiredSwordSkill}[/blue]\n攻击所造成的伤害变为 [blue]{1.1^Amount}[/blue] 倍"`
+Compute derived display values in code and expose them as DynamicVars, then reference those variables in localization:
+
+```csharp
+new StringDynamicVar("Multiplier", () => GetMultiplier().ToString("0.##", CultureInfo.InvariantCulture))
+```
+
+Use simple placeholders in Power smart descriptions:
+
+- English: `"Attack damage becomes [blue]{Multiplier}[/blue]x.\nRequires [blue]{RequiredSwordSkill}[/blue] [gold]Sword Skill[/gold]."`
+- Chinese: translate naturally in `zhs` while keeping only simple placeholders like `{Multiplier}` and `{RequiredSwordSkill}`.
 
 **Code simplification patterns**:
 - Remove unnecessary using statements: only include what's actually used
-- Simplify math operations: `(decimal)Math.Pow(1.1, Amount)` instead of `(decimal)Math.Pow(1.1, (double)Amount)`
+- Use explicit numeric conversions when an API requires them, e.g. `Math.Pow(1.1, (double)Amount)` because `Amount` is decimal while `Math.Pow` expects doubles
 - Use direct references when the framework auto-handles type conversions
 - Prefer helper methods over complex inline logic
 
@@ -164,6 +178,9 @@ Follow this concise format for Power smart descriptions:
 - Add helper methods for complex conditions to improve readability
 - Keep `OnPlay` methods focused on core card logic, delegate complex checks to helpers
 - Use LINQ and pattern matching for cleaner conditional logic
+- For cards that remove powers, prefer the standard power command path over direct collection mutation. Snapshot matching powers with `.ToList()`, then remove stacks through `PowerCmd.Apply<TPower>(..., -power.Amount, ...)`.
+- When the concrete power type is only known at runtime, a small generic helper invoked with `(dynamic)power` can dispatch to the correct `PowerCmd.Apply<TPower>` overload.
+- For return-to-hand effects like `SwordArtKenzakiFusou`, track the observed power amount after `OnPlay` and only return the card when a later hook sees the relevant power increase while the card is no longer in hand.
 
 **Getting other powers**:
 
@@ -206,6 +223,8 @@ Important files:
 - Carries saved weapon-slot state through `[SavedProperty]`.
 - Uses dynamic relic description variables for weapon names and levels only.
 - Aggregates weapon-specific hover tips from `WeaponBehaviorRegistry`; long weapon descriptions and weapon effect details belong to behaviors, not the relic description body.
+- Only exposes the upgrade reward when `WeaponSlotState.CanUpgradeCurrentWeapon` is true.
+- Calls `InvokeDisplayAmountChanged()` after a successful weapon upgrade so the relic description re-renders dynamic weapon level text.
 
 Weapon localization currently lives in the `relics` localization table, not a custom `weapons` table. The game does not automatically create arbitrary localization tables, so `WeaponLocalization` reads keys like:
 
@@ -220,6 +239,7 @@ Weapon localization currently lives in the `relics` localization table, not a cu
 Current pattern:
 
 ```csharp
+int MaxLevel { get; }
 Task BeforeCombatStart(WeaponState weapon, Player player);
 Task AfterSideTurnStart(WeaponState weapon, Player player, CombatSide side, ICombatState combatState);
 Task AfterRoomEntered(WeaponState weapon, Player player, AbstractRoom room);
@@ -233,6 +253,8 @@ IEnumerable<IHoverTip> GetHoverTips(WeaponState weapon);
 
 Examples:
 
+- `WeaponBehavior.MaxLevel` defaults to `int.MaxValue`; override it on specific weapon behaviors when a weapon has a real cap.
+- `BrokenSwordBehavior.MaxLevel` is 2, so the broken sword cannot keep upgrading after it reaches the upgraded Dramatic Entrance effect.
 - `SwordBehavior.GetHoverTips` adds the sword-weapon keyword and `SwordSkill` power tip after the base weapon description.
 - `BrokenSwordBehavior.GetHoverTips` calls `SwordBehavior` and then adds a `DramaticEntrance` card hover tip. This keeps Dramatic Entrance visible only for broken sword, not all swords.
 - `StaffBehavior` and `BowBehavior` add only their own weapon-type keyword tips after the base weapon description.
@@ -252,8 +274,9 @@ To add a new weapon:
 1. Create a new `XXXBehavior` class in the appropriate `Behaviors/{WeaponKind}/` subfolder, extending `WeaponBehavior` (or a more specific subclass like `SwordBehavior`).
 2. If the weapon uses a custom ID, register it in `WeaponBehaviorRegistry.BehaviorsById` via `Register(id, behavior)`.
 3. If it is the default for a new `WeaponKind`, add it to `BehaviorsByKind`.
-4. Add `*.weaponTitle` and `*.weaponDescription` entries to `localization/eng/relics.json` and `localization/zhs/relics.json`.
-5. Put long effect explanations in the weapon hover tip via behavior/localization; keep `WeaponBagRelic.description` short enough to show only equipped weapon names and levels.
+4. Override `MaxLevel` when the weapon should stop upgrading at a fixed level.
+5. Add `*.weaponTitle` and `*.weaponDescription` entries to `localization/eng/relics.json` and `localization/zhs/relics.json`.
+6. Put long effect explanations in the weapon hover tip via behavior/localization; keep `WeaponBagRelic.description` short enough to show only equipped weapon names and levels.
 
 Weapon-type hover tips use custom `CardKeyword` values from `GensouNoTabibitoKeywords`:
 
@@ -288,6 +311,7 @@ Reward and relic APIs:
 - Override relic lifecycle hooks such as `AfterCardPlayed`, `BeforeTurnEnd`, and room/combat hooks when the relic owns the gameplay trigger.
 - Override `TryModifyCardRewardAlternatives(CardReward cardReward, List<CardRewardAlternative> alternatives)` to add card-reward replacement actions.
 - Create alternatives with `new CardRewardAlternative(id, callback, PostAlternateCardRewardAction.EndSelectionAndCompleteReward)` when selecting the alternative should finish the reward flow.
+- Call `InvokeDisplayAmountChanged()` after changing state that appears in a relic's dynamic description; otherwise the visible relic description may keep cached text even though hover tips recalculate.
 
 Persistence and patch APIs:
 

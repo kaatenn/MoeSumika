@@ -1,4 +1,6 @@
+using System.Globalization;
 using GensouNoTabibito.GensouNoTabibitoCode.Keywords;
+using GensouNoTabibito.GensouNoTabibitoCode.Localization;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
@@ -11,14 +13,16 @@ namespace GensouNoTabibito.GensouNoTabibitoCode.Powers;
 
 public class Iai : GensouNoTabibitoPower
 {
-    public override PowerType Type => PowerType.Buff;
+    public override PowerType Type => Amount > 0 ? PowerType.Buff : PowerType.Debuff;
     public override PowerStackType StackType => PowerStackType.Counter;
+    public override bool AllowNegative => true;
 
     private const int RequiredSwordSkillAmount = 4;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new("RequiredSwordSkill", RequiredSwordSkillAmount)
+        new("RequiredSwordSkill", RequiredSwordSkillAmount),
+        new StringDynamicVar("Multiplier", () => GetMultiplier().ToString("0.##", CultureInfo.InvariantCulture))
     ];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
@@ -37,6 +41,8 @@ public class Iai : GensouNoTabibitoPower
         if (swordSkillPower == null || swordSkillPower.Amount < RequiredSwordSkillAmount)
             return 1m;
 
-        return (decimal)Math.Pow(1.1, Amount);
+        return GetMultiplier();
     }
+
+    private decimal GetMultiplier() => (decimal)Math.Pow(1.1, (double)Amount);
 }

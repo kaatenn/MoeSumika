@@ -30,7 +30,7 @@ public class GensouNoTabibito : PlaceholderCharacterModel
         ModelDb.Card<DefendGensouNoTabibito>(),
         ModelDb.Card<DefendGensouNoTabibito>(),
         ModelDb.Card<SwordArtWindrend>(),
-        ModelDb.Card<Regroup>()
+        ModelDb.Card<BakedSweetPotato>()
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics =>

@@ -10,5 +10,7 @@
   "GENSOUNOTABIBITO-DIN_IN.description": "Gain {Block:diff()} [gold]Block[/gold]. Gain {PlatingPower:diff()} [gold]Plating[/gold]. Draw {Cards:diff()} cards.",
   "GENSOUNOTABIBITO-DIN_IN.title": "Dine In",
   "GENSOUNOTABIBITO-SWORD_ART_WINDREND.description": "Gain {Block:diff()} [gold]Block[/gold]. If an enemy intends to attack, [gold]Block[/gold] is not removed at the start of your next {BlurPower:diff()} turns.",
-  "GENSOUNOTABIBITO-SWORD_ART_WINDREND.title": "Sword Art: Windrend"
+  "GENSOUNOTABIBITO-SWORD_ART_WINDREND.title": "Sword Art: Windrend",
+  "GENSOUNOTABIBITO-BAKED_SWEET_POTATO.description": "Gain{Energy:energyIcons()}. When [gold]Retained[/gold], gain an additional{Increase:energyIcons()}.",
+  "GENSOUNOTABIBITO-BAKED_SWEET_POTATO.title": "Baked Sweet Potato"
 }

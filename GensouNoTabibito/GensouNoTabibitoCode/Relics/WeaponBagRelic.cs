@@ -187,7 +187,9 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
         if (!ReferenceEquals(player, Owner))
             return false;
 
-        EnsureWeaponEquipped();
+        var slot = EnsureWeaponSlotEquipped();
+        if (!slot.CanUpgradeCurrentWeapon)
+            return false;
 
         alternatives.Add(new CardRewardAlternative(
             UpgradeWeaponAlternativeId,
@@ -211,8 +213,11 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
     {
         var slot = GetWeaponSlot();
         slot.EnsureWeaponEquipped(WeaponState.CreateBrokenSword());
-        slot.UpgradeCurrentWeapon();
+        if (!slot.UpgradeCurrentWeapon())
+            return Task.CompletedTask;
+
         SyncSavedWeaponFromPlayerSlot(Owner);
+        InvokeDisplayAmountChanged();
         return Task.CompletedTask;
     }
 

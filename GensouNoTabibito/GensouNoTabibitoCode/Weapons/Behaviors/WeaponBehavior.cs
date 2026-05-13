@@ -9,6 +9,8 @@ namespace GensouNoTabibito.GensouNoTabibitoCode.Weapons;
 
 public abstract class WeaponBehavior : IWeaponBehavior
 {
+    public virtual int MaxLevel => int.MaxValue;
+
     public virtual Task BeforeCombatStart(WeaponState weapon, Player player)
     {
         return Task.CompletedTask;

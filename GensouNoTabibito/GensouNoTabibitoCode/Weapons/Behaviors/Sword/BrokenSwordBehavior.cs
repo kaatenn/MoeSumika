@@ -12,6 +12,8 @@ namespace GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors.Sword;
 
 public sealed class BrokenSwordBehavior : SwordBehavior
 {
+    public override int MaxLevel => 2;
+
     public override async Task AfterSideTurnStart(
         WeaponState weapon,
         Player player,

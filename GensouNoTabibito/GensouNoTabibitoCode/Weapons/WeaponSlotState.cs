@@ -9,6 +9,8 @@ public sealed class WeaponSlotState
 
     public bool HasWeapon => PrimaryWeapon != null;
     public bool CanHoldSecondaryWeapon => PrimaryWeapon?.Kind == WeaponKind.Sword;
+    public bool CanUpgradeCurrentWeapon => PrimaryWeapon != null && WeaponBehaviorRegistry.CanUpgrade(PrimaryWeapon);
+    public bool CanUpgradeSecondaryWeapon => SecondaryWeapon != null && WeaponBehaviorRegistry.CanUpgrade(SecondaryWeapon);
 
     public IEnumerable<WeaponState> Weapons
     {
@@ -64,18 +66,20 @@ public sealed class WeaponSlotState
         // TODO: When weapon drafting UI exists, ask which occupied slot to replace.
     }
 
-    public void UpgradeCurrentWeapon()
+    public bool UpgradeCurrentWeapon()
     {
-        PrimaryWeapon?.Upgrade();
+        if (PrimaryWeapon == null)
+            return false;
 
-        // TODO: Flash relic or play a weapon-upgrade VFX/SFX.
+        return WeaponBehaviorRegistry.TryUpgrade(PrimaryWeapon);
     }
 
-    public void UpgradeSecondaryWeapon()
+    public bool UpgradeSecondaryWeapon()
     {
-        SecondaryWeapon?.Upgrade();
+        if (SecondaryWeapon == null)
+            return false;
 
-        // TODO: Let weapon-upgrade rewards choose which weapon to upgrade when dual-wielding.
+        return WeaponBehaviorRegistry.TryUpgrade(SecondaryWeapon);
     }
 
     private void EnforceCapacity()

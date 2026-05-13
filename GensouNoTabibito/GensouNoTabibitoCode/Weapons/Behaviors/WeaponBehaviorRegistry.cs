@@ -73,6 +73,20 @@ public static class WeaponBehaviorRegistry
         return Get(weapon).GetHoverTips(weapon);
     }
 
+    public static bool CanUpgrade(WeaponState weapon)
+    {
+        return weapon.Level < Get(weapon).MaxLevel;
+    }
+
+    public static bool TryUpgrade(WeaponState weapon)
+    {
+        if (!CanUpgrade(weapon))
+            return false;
+
+        weapon.Upgrade();
+        return true;
+    }
+
     private static IWeaponBehavior Get(WeaponState weapon)
     {
         return BehaviorsById.TryGetValue(weapon.Id, out var behavior)

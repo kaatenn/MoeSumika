@@ -10,5 +10,8 @@
   "GENSOUNOTABIBITO-PEREGRIN_PATH_TEMP_DEX_LOSS.title": "旅者之路",
   "GENSOUNOTABIBITO-BATTOU.title": "拔刀",
   "GENSOUNOTABIBITO-BATTOU.description": "攻击造成 [gold]1.1^X[/gold] 倍伤害。需要 [blue]4[/blue] 层 [gold]剑技等级[/gold]。",
-  "GENSOUNOTABIBITO-BATTOU.smartDescription": "攻击造成 [blue]{1.1^PowerAmount}[/blue] 倍伤害。\n需要 [blue]{RequiredSwordSkill}[/blue] 层 [gold]剑技等级[/gold]。"
+  "GENSOUNOTABIBITO-BATTOU.smartDescription": "攻击造成 [blue]{1.1^PowerAmount}[/blue] 倍伤害。\n需要 [blue]{RequiredSwordSkill}[/blue] 层 [gold]剑技等级[/gold]。",
+  "GENSOUNOTABIBITO-IAI.title": "居合",
+  "GENSOUNOTABIBITO-IAI.description": "获得护甲变为 [gold]1.1^X[/gold] 倍。需要 [blue]4[/blue] 层 [gold]剑技等级[/gold]。",
+  "GENSOUNOTABIBITO-IAI.smartDescription": "获得护甲变为 [blue]{1.1^PowerAmount}[/blue] 倍。\n需要 [blue]{RequiredSwordSkill}[/blue] 层 [gold]剑技等级[/gold]。"
 }

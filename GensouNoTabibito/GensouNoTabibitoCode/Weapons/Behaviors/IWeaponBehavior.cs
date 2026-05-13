@@ -9,6 +9,8 @@ namespace GensouNoTabibito.GensouNoTabibitoCode.Weapons;
 
 public interface IWeaponBehavior
 {
+    int MaxLevel { get; }
+
     Task BeforeCombatStart(WeaponState weapon, Player player);
     Task AfterRoomEntered(WeaponState weapon, Player player, AbstractRoom room);
     Task AfterSideTurnStart(WeaponState weapon, Player player, CombatSide side, ICombatState combatState);

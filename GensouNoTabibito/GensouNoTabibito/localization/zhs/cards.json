@@ -10,5 +10,7 @@
   "GENSOUNOTABIBITO-DIN_IN.description": "获得{Block:diff()}点[gold]格挡[/gold]。获得{PlatingPower:diff()}层[gold]覆甲[/gold]。抽{Cards:diff()}张牌。",
   "GENSOUNOTABIBITO-DIN_IN.title": "堂食",
   "GENSOUNOTABIBITO-SWORD_ART_WINDREND.description": "获得{Block:diff()}点[gold]格挡[/gold]。如果有敌人的意图是攻击，则保留[gold]格挡[/gold]{BlurPower:diff()}个回合。",
-  "GENSOUNOTABIBITO-SWORD_ART_WINDREND.title": "剑技·断风"
+  "GENSOUNOTABIBITO-SWORD_ART_WINDREND.title": "剑技·断风",
+  "GENSOUNOTABIBITO-BAKED_SWEET_POTATO.description": "获得{Energy:energyIcons()}。每当此牌被[gold]保留[/gold]时，额外获得{Increase:energyIcons()}。",
+  "GENSOUNOTABIBITO-BAKED_SWEET_POTATO.title": "烤红薯"
 }

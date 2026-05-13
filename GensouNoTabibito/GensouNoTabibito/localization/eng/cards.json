@@ -7,8 +7,8 @@
   "GENSOUNOTABIBITO-PEREGRIN_PATH.title": "Peregrin Path",
   "GENSOUNOTABIBITO-REGROUP.description": "Gain {Block:diff()} [gold]Block[/gold]. Gain {PlatingPower:diff()} [gold]Plating[/gold].",
   "GENSOUNOTABIBITO-REGROUP.title": "Regroup",
-  "GENSOUNOTABIBITO-DIN_IN.description": "Gain {Block:diff()} [gold]Block[/gold]. Gain {PlatingPower:diff()} [gold]Plating[/gold]. Draw {Cards:diff()} card.",
+  "GENSOUNOTABIBITO-DIN_IN.description": "Gain {Block:diff()} [gold]Block[/gold]. Gain {PlatingPower:diff()} [gold]Plating[/gold]. Draw {Cards:diff()} cards.",
   "GENSOUNOTABIBITO-DIN_IN.title": "Dine In",
-  "GENSOUNOTABIBITO-SWORD_ART_WINDREND.description": "Gain {Block:diff()} [gold]Block[/gold]. At the start of your next {BlurPower:diff()} turns, [gold]Block[/gold] is not removed.",
+  "GENSOUNOTABIBITO-SWORD_ART_WINDREND.description": "Gain {Block:diff()} [gold]Block[/gold]. If an enemy intends to attack, [gold]Block[/gold] is not removed at the start of your next {BlurPower:diff()} turns.",
   "GENSOUNOTABIBITO-SWORD_ART_WINDREND.title": "Sword Art: Windrend"
 }

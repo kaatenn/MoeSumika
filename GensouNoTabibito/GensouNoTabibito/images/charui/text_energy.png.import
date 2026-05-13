@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://wxold8fxilaf"
-path="res://.godot/imported/text_energy.png-6fbec30f3291c5236a220265bf7ecd5b.ctex"
+path="res://.godot/imported/text_energy.png-468644cf6257a48770c5b429bfc59f4d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://GensouNoTabibito/images/charui/text_energy.png"
-dest_files=["res://.godot/imported/text_energy.png-6fbec30f3291c5236a220265bf7ecd5b.ctex"]
+dest_files=["res://.godot/imported/text_energy.png-468644cf6257a48770c5b429bfc59f4d.ctex"]
 
 [params]
 

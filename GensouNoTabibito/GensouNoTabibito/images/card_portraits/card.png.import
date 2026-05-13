@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d1fhnashd4sfp"
-path="res://.godot/imported/card.png-18c2597b353f719f9b9fca2d2b249edd.ctex"
+path="res://.godot/imported/card.png-a59973c2f1a80d472c63a1b96876a372.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://GensouNoTabibito/images/card_portraits/card.png"
-dest_files=["res://.godot/imported/card.png-18c2597b353f719f9b9fca2d2b249edd.ctex"]
+dest_files=["res://.godot/imported/card.png-a59973c2f1a80d472c63a1b96876a372.ctex"]
 
 [params]
 

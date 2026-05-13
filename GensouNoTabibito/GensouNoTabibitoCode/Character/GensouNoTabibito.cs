@@ -28,7 +28,9 @@ public class GensouNoTabibito : PlaceholderCharacterModel
         ModelDb.Card<DefendGensouNoTabibito>(),
         ModelDb.Card<DefendGensouNoTabibito>(),
         ModelDb.Card<DefendGensouNoTabibito>(),
-        ModelDb.Card<DefendGensouNoTabibito>()
+        ModelDb.Card<DefendGensouNoTabibito>(),
+        ModelDb.Card<SwordArtWindrend>(),
+        ModelDb.Card<Regroup>()
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics =>

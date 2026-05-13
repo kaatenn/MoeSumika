@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c7k8s2xp1eng"
-path="res://.godot/imported/power.png-61434d9444b3ee8b29482e148609e890.ctex"
+path="res://.godot/imported/power.png-b0a78b5aab660c074a05fe635da5b2df.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://GensouNoTabibito/images/powers/big/power.png"
-dest_files=["res://.godot/imported/power.png-61434d9444b3ee8b29482e148609e890.ctex"]
+dest_files=["res://.godot/imported/power.png-b0a78b5aab660c074a05fe635da5b2df.ctex"]
 
 [params]
 

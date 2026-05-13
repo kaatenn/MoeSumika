@@ -13,4 +13,7 @@ public static class GensouNoTabibitoKeywords
 
     [CustomEnum("BOW_WEAPON")] [KeywordProperties(AutoKeywordPosition.None)]
     public static CardKeyword BowWeapon;
+
+    [CustomEnum("SWORD_SKILL_REQUIREMENT")] [KeywordProperties(AutoKeywordPosition.None)]
+    public static CardKeyword SwordSkillRequirement;
 }

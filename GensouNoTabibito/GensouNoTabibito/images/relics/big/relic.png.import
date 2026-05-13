@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c46qfw0fugg83"
-path="res://.godot/imported/relic.png-838e8caf8f0c20445215296ead06ee79.ctex"
+path="res://.godot/imported/relic.png-eb62749b4e00170ca79bb53116e701e8.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://GensouNoTabibito/images/relics/big/relic.png"
-dest_files=["res://.godot/imported/relic.png-838e8caf8f0c20445215296ead06ee79.ctex"]
+dest_files=["res://.godot/imported/relic.png-eb62749b4e00170ca79bb53116e701e8.ctex"]
 
 [params]
 

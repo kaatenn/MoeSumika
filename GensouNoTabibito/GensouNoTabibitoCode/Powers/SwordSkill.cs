@@ -1,5 +1,7 @@
 using BaseLib.Abstracts;
+using GensouNoTabibito.GensouNoTabibitoCode.Keywords;
 using MegaCrit.Sts2.Core.Entities.Powers;
+using MegaCrit.Sts2.Core.HoverTips;
 
 namespace GensouNoTabibito.GensouNoTabibitoCode.Powers;
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b8b2nucnpgf6d"
-path="res://.godot/imported/character_icon_char_name.png-a553131958f05315f93fa8d977dcef69.ctex"
+path="res://.godot/imported/character_icon_char_name.png-2ea45a0989278a14d1fae70bbd9c8744.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://GensouNoTabibito/images/charui/character_icon_char_name.png"
-dest_files=["res://.godot/imported/character_icon_char_name.png-a553131958f05315f93fa8d977dcef69.ctex"]
+dest_files=["res://.godot/imported/character_icon_char_name.png-2ea45a0989278a14d1fae70bbd9c8744.ctex"]
 
 [params]
 

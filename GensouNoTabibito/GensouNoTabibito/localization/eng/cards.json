@@ -17,6 +17,14 @@
   "GENSOUNOTABIBITO-SWORD_ART_KENZAKI_FUSOU.title": "Sword Art: Kenzaki Fusou",
   "GENSOUNOTABIBITO-DRAFT_WEAPON_REWARD.description": "Draft a random weapon.",
   "GENSOUNOTABIBITO-DRAFT_WEAPON_REWARD.title": "Draft Weapon",
+  "GENSOUNOTABIBITO-DRAFT_PRIMARY_WEAPON_REWARD.description": "Draft a random weapon for your main hand.",
+  "GENSOUNOTABIBITO-DRAFT_PRIMARY_WEAPON_REWARD.title": "Draft Main-Hand Weapon",
+  "GENSOUNOTABIBITO-DRAFT_SECONDARY_WEAPON_REWARD.description": "Draft a random weapon for your off hand.",
+  "GENSOUNOTABIBITO-DRAFT_SECONDARY_WEAPON_REWARD.title": "Draft Off-Hand Weapon",
   "GENSOUNOTABIBITO-UPGRADE_WEAPON_REWARD.description": "Upgrade your current weapon.",
-  "GENSOUNOTABIBITO-UPGRADE_WEAPON_REWARD.title": "Upgrade Weapon"
+  "GENSOUNOTABIBITO-UPGRADE_WEAPON_REWARD.title": "Upgrade Weapon",
+  "GENSOUNOTABIBITO-UPGRADE_PRIMARY_WEAPON_REWARD.description": "Upgrade your main-hand weapon.",
+  "GENSOUNOTABIBITO-UPGRADE_PRIMARY_WEAPON_REWARD.title": "Upgrade Main-Hand Weapon",
+  "GENSOUNOTABIBITO-UPGRADE_SECONDARY_WEAPON_REWARD.description": "Upgrade your off-hand weapon.",
+  "GENSOUNOTABIBITO-UPGRADE_SECONDARY_WEAPON_REWARD.title": "Upgrade Off-Hand Weapon"
 }

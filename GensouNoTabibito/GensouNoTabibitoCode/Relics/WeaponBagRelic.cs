@@ -269,11 +269,47 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
         InvokeDisplayAmountChanged();
     }
 
+    public void DraftPrimaryWeaponFromReward()
+    {
+        var slot = GetWeaponSlot();
+        slot.ReplaceWeapon(CreateRandomWeapon());
+
+        SyncSavedWeaponFromPlayerSlot(Owner);
+        InvokeDisplayAmountChanged();
+    }
+
+    public void DraftSecondaryWeaponFromReward()
+    {
+        var slot = GetWeaponSlot();
+        if (!slot.CanHoldSecondaryWeapon)
+            return;
+
+        slot.ReplaceSecondaryWeapon(CreateRandomWeapon());
+
+        SyncSavedWeaponFromPlayerSlot(Owner);
+        InvokeDisplayAmountChanged();
+    }
+
     public void UpgradeWeaponFromReward()
     {
         var slot = GetWeaponSlot();
         slot.EnsureWeaponEquipped(WeaponState.CreateBrokenSword());
         if (!slot.UpgradeCurrentWeapon())
+            return;
+
+        SyncSavedWeaponFromPlayerSlot(Owner);
+        InvokeDisplayAmountChanged();
+    }
+
+    public void UpgradePrimaryWeaponFromReward()
+    {
+        UpgradeWeaponFromReward();
+    }
+
+    public void UpgradeSecondaryWeaponFromReward()
+    {
+        var slot = GetWeaponSlot();
+        if (!slot.UpgradeSecondaryWeapon())
             return;
 
         SyncSavedWeaponFromPlayerSlot(Owner);
@@ -316,10 +352,24 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
 
     private IEnumerable<CardModel> CreateWeaponRewardCards()
     {
-        if (GetWeaponSlot().CanUpgradeCurrentWeapon)
-            yield return Owner.RunState.CreateCard<UpgradeWeaponReward>(Owner);
+        var slot = GetWeaponSlot();
+        if (!slot.CanHoldSecondaryWeapon)
+        {
+            if (slot.CanUpgradeCurrentWeapon)
+                yield return Owner.RunState.CreateCard<UpgradeWeaponReward>(Owner);
 
-        yield return Owner.RunState.CreateCard<DraftWeaponReward>(Owner);
+            yield return Owner.RunState.CreateCard<DraftWeaponReward>(Owner);
+            yield break;
+        }
+
+        if (slot.CanUpgradeCurrentWeapon)
+            yield return Owner.RunState.CreateCard<UpgradePrimaryWeaponReward>(Owner);
+
+        if (slot.CanUpgradeSecondaryWeapon)
+            yield return Owner.RunState.CreateCard<UpgradeSecondaryWeaponReward>(Owner);
+
+        yield return Owner.RunState.CreateCard<DraftPrimaryWeaponReward>(Owner);
+        yield return Owner.RunState.CreateCard<DraftSecondaryWeaponReward>(Owner);
     }
 
     private static WeaponState CreateRandomWeapon()

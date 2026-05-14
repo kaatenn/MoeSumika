@@ -25,8 +25,9 @@ Notes from this environment:
 - `dotnet` may not be on `PATH`; use the absolute path above.
 - `git` may not be on `PATH`; `C:\Program Files\Git\cmd\git.exe` exists.
 - PowerShell startup prints an `oh-my-posh` error. It is profile noise and not related to the repo.
+- PowerShell output in this environment may render UTF-8 Chinese text as mojibake. Do not assume localization files are corrupted from console rendering alone. Verify with explicit UTF-8 reads, JSON parsing, or byte/Unicode inspection, for example `Get-Content -Encoding utf8 -Raw` or `[System.Text.Encoding]::UTF8.GetString([System.IO.File]::ReadAllBytes(...))`.
 - Building may need access outside the sandbox for Godot SDK/NuGet/game references. If sandboxed build fails with `Godot.NET.Sdk` or NuGet source resolution errors, rerun with appropriate escalation.
-- A successful build runs the project post-build copy target and copies mod outputs to the configured Slay the Spire 2 mods folder.
+- A successful build runs the project post-build copy target and copies mod outputs to the configured Slay the Spire 2 mods folder. If Slay the Spire 2 is running, the post-build copy can warn because `SlayTheSpire2.exe` locks the mod DLL; the C# compile can still be successful.
 
 ## Dependency Paths
 
@@ -81,13 +82,24 @@ Card reward option localization uses `localization/{locale}/card_reward_ui.json`
 
 - `OPTION_GENSOUNOTABIBITO-DRAFT_WEAPON.name`
 - `OPTION_GENSOUNOTABIBITO-UPGRADE_WEAPON.name`
+- `OPTION_GENSOUNOTABIBITO-WEAPON_REWARD.name`
+
+Weapon reward screen header localization uses `localization/{locale}/gameplay_ui.json`:
+
+- `GENSOUNOTABIBITO-WEAPON_REWARD_HEADER`
 
 Current `WeaponBagRelic.TryModifyCardRewardAlternatives` uses one top-level weapon card-reward replacement action to respect the two-alternative UI limit:
 
 - The top-level option is `OPTION_GENSOUNOTABIBITO-WEAPON_REWARD.name`.
 - Selecting it mutates the current `CardReward` in place: it replaces the reward's private `_cards` list with weapon action cards and refreshes the current `NCardRewardSelectionScreen`.
-- The replacement options can offer `UpgradeWeaponReward` and `DraftWeaponReward`, so players may draft a new weapon before the current weapon is fully upgraded.
-- `DRAFT_WEAPON` currently rolls from the weapon draft pool in `WeaponBagRelic`.
+- After replacement, call `CardRewardAlternative.Generate(sourceReward)` and pass the result to `NCardRewardSelectionScreen.RefreshOptions`; passing an empty alternatives list removes Skip. Set `sourceReward.CanReroll = false` before generation so the weapon screen keeps Skip but not Reroll.
+- `WeaponRewardSelectionScreenLayout` patches `NCardRewardSelectionScreen.RefreshOptions` and detects weapon reward screens by checking for `WeaponRewardActionCard` options. It then updates `UI/Banner` (`NCommonBanner`) to `GENSOUNOTABIBITO-WEAPON_REWARD_HEADER` and applies compact card spacing. Do not rely on one-time setup from `WeaponBagRelic`; pressing Esc back to the reward list and reopening can create/show screens without rerunning the relic replacement path.
+- `WeaponRewardSelectionScreenLayout` also patches `AfterOverlayShown` and `AfterOverlayOpened` to reapply compact spacing when a marked weapon reward screen is shown again. Keep the custom tween in that helper so the cards still animate outward from the center while using compressed target positions.
+- The replacement options can offer generic `UpgradeWeaponReward` / `DraftWeaponReward` when no secondary slot is available, or slot-specific `UpgradePrimaryWeaponReward`, `UpgradeSecondaryWeaponReward`, `DraftPrimaryWeaponReward`, and `DraftSecondaryWeaponReward` when a sword primary enables the secondary slot.
+- When both primary and secondary weapons are equipped, the replacement options also offer `DiscardSecondaryWeaponReward` and `DiscardPrimaryWeaponReward`. Discarding the primary weapon promotes the secondary weapon into the primary slot and clears the secondary slot.
+- Draft reward cards inherit `DraftWeaponRewardCard`. The random `WeaponState` is created when reward cards are generated, then stored on the card so the card description and hover tips show the exact weapon before the player chooses it. Resolving the card equips that stored weapon; do not reroll in `Resolve`.
+- Draft reward card descriptions use the `DraftedWeaponName` DynamicVar and `ExtraHoverTips` delegates to `WeaponBehaviorRegistry.GetHoverTips(DraftedWeapon)`.
+- `DRAFT_WEAPON` rolls from the weapon draft pool in `WeaponBagRelic`.
 - The action cards live under `GensouNoTabibitoCode/Cards/Actions/` and use `WeaponActionCardPool`. Keep them `autoAdd: false` and hidden from the card library.
 - `WeaponRewardActionCard` must explicitly override `Pool` and `VisualCardPool`; otherwise `NCard` rendering can fall through to `MockCardPool` and throw `You monster!`.
 - `ShouldAddToDeck` only blocks weapon action cards from entering the deck. Resolve their effect in `AfterAddToDeckPrevented`, because returning `false` from `ShouldAddToDeck` prevents `TryModifyCardBeingAddedToDeck` from running.
@@ -97,6 +109,7 @@ Current concrete weapons:
 
 - Broken Sword: `GENSOUNOTABIBITO-BROKEN_SWORD`, sword weapon, max level 2.
 - Light Sword: `GENSOUNOTABIBITO-LIGHT_SWORD`, sword weapon, max level 5. At combat start it grants 1/1/2/2/3 Dexterity by level, and all Sword Skill tagged cards deal +2 damage while any equipped weapon is Light Sword.
+- Dual wield restriction: when both primary and secondary weapons are equipped, `WeaponBehaviorRegistry` does not dispatch normal weapon behavior hooks or additive damage modifiers. `BeforeCombatStart` only applies 10 stacks of `SwordSkill`; all other weapon special effects are disabled.
 
 ## Temporary Custom Reward Note
 
@@ -496,6 +509,7 @@ public static class SwordSkillTagHook
 
 **Chinese localization principles**:
 - Follow native Chinese expression patterns, not English translation structures
+- Follow official Chinese spacing style: do not put spaces between Chinese characters and Arabic numerals or numeric DynamicVars. Examples: use `减少2点`, `获得{PowerAmount}点`, `需要[blue]{RequiredSwordSkill}[/blue]层`, and `增加[blue]2[/blue]点`, not spaced variants.
 - Use standard phrases: "每当你...时，获得" (not "打出...时获得")
 - Damage expressions: "攻击造成...倍伤害" (not "攻击伤害变为...倍")
 - Time expressions: "在本回合" (not "该回合")

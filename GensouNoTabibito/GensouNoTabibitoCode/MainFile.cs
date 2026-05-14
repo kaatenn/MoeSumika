@@ -3,6 +3,7 @@ using HarmonyLib;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Modding;
 using GensouNoTabibito.GensouNoTabibitoCode.Weapons;
+using GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors;
 using GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors.Sword;
 using Logger = MegaCrit.Sts2.Core.Logging.Logger;
 

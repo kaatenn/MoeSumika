@@ -1,3 +1,5 @@
+using GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors;
+
 namespace GensouNoTabibito.GensouNoTabibitoCode.Weapons;
 
 public sealed class WeaponSlotState
@@ -44,6 +46,30 @@ public sealed class WeaponSlotState
         SecondaryWeapon = CanHoldSecondaryWeapon ? weapon : null;
 
         // TODO: Notify/update the custom weapon-slot UI once that UI exists.
+    }
+
+    public bool DiscardPrimaryWeapon()
+    {
+        if (PrimaryWeapon == null)
+            return false;
+
+        PrimaryWeapon = SecondaryWeapon;
+        SecondaryWeapon = null;
+        EnforceCapacity();
+
+        // TODO: Notify/update the custom weapon-slot UI once that UI exists.
+        return true;
+    }
+
+    public bool DiscardSecondaryWeapon()
+    {
+        if (SecondaryWeapon == null)
+            return false;
+
+        SecondaryWeapon = null;
+
+        // TODO: Notify/update the custom weapon-slot UI once that UI exists.
+        return true;
     }
 
     public void EquipWeapon(WeaponState weapon)

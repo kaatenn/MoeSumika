@@ -1,4 +1,9 @@
+using GensouNoTabibito.GensouNoTabibitoCode.Powers;
+using GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors.Bow;
+using GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors.Staff;
+using GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors.Sword;
 using MegaCrit.Sts2.Core.Combat;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
@@ -7,14 +12,13 @@ using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Rooms;
 using MegaCrit.Sts2.Core.ValueProps;
-using GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors.Bow;
-using GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors.Staff;
-using GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors.Sword;
 
-namespace GensouNoTabibito.GensouNoTabibitoCode.Weapons;
+namespace GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors;
 
 public static class WeaponBehaviorRegistry
 {
+    private const int DualWieldSwordSkill = 10;
+
     private static readonly Dictionary<string, IWeaponBehavior> BehaviorsById = new();
 
     private static readonly Dictionary<WeaponKind, IWeaponBehavior> BehaviorsByKind = new()
@@ -31,11 +35,17 @@ public static class WeaponBehaviorRegistry
 
     public static Task BeforeCombatStart(WeaponSlotState slot, Player player)
     {
+        if (IsDualWielding(slot))
+            return ApplyDualWieldSwordSkill(player);
+
         return ForEach(slot, weapon => Get(weapon).BeforeCombatStart(weapon, player));
     }
 
     public static Task AfterRoomEntered(WeaponSlotState slot, Player player, AbstractRoom room)
     {
+        if (IsDualWielding(slot))
+            return Task.CompletedTask;
+
         return ForEach(slot, weapon => Get(weapon).AfterRoomEntered(weapon, player, room));
     }
 
@@ -45,11 +55,17 @@ public static class WeaponBehaviorRegistry
         CombatSide side,
         ICombatState combatState)
     {
+        if (IsDualWielding(slot))
+            return Task.CompletedTask;
+
         return ForEach(slot, weapon => Get(weapon).AfterSideTurnStart(weapon, player, side, combatState));
     }
 
     public static Task BeforeCardPlayed(WeaponSlotState slot, Player player, CardPlay cardPlay)
     {
+        if (IsDualWielding(slot))
+            return Task.CompletedTask;
+
         return ForEach(slot, weapon => Get(weapon).BeforeCardPlayed(weapon, player, cardPlay));
     }
 
@@ -59,6 +75,9 @@ public static class WeaponBehaviorRegistry
         PlayerChoiceContext choiceContext,
         CardPlay cardPlay)
     {
+        if (IsDualWielding(slot))
+            return Task.CompletedTask;
+
         return ForEach(slot, weapon => Get(weapon).AfterCardPlayed(weapon, player, choiceContext, cardPlay));
     }
 
@@ -68,6 +87,9 @@ public static class WeaponBehaviorRegistry
         PlayerChoiceContext choiceContext,
         CombatSide side)
     {
+        if (IsDualWielding(slot))
+            return Task.CompletedTask;
+
         return ForEach(slot, weapon => Get(weapon).BeforeTurnEnd(weapon, player, choiceContext, side));
     }
 
@@ -79,6 +101,9 @@ public static class WeaponBehaviorRegistry
         Creature? dealer,
         CardModel? cardSource)
     {
+        if (IsDualWielding(slot))
+            return 0m;
+
         return slot.Weapons.Sum(weapon => Get(weapon).ModifyDamageAdditive(
             weapon,
             target,
@@ -112,6 +137,21 @@ public static class WeaponBehaviorRegistry
         return BehaviorsById.TryGetValue(weapon.Id, out var behavior)
             ? behavior
             : BehaviorsByKind[weapon.Kind];
+    }
+
+    private static bool IsDualWielding(WeaponSlotState slot)
+    {
+        return slot.PrimaryWeapon != null && slot.SecondaryWeapon != null;
+    }
+
+    private static Task ApplyDualWieldSwordSkill(Player player)
+    {
+        return PowerCmd.Apply<SwordSkill>(
+            new ThrowingPlayerChoiceContext(),
+            player.Creature,
+            DualWieldSwordSkill,
+            player.Creature,
+            null);
     }
 
     private static async Task ForEach(WeaponSlotState slot, Func<WeaponState, Task> action)

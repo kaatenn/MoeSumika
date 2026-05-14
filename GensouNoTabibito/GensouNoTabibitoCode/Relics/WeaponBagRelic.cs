@@ -24,6 +24,7 @@ using GensouNoTabibito.GensouNoTabibitoCode.Cards.Actions;
 using GensouNoTabibito.GensouNoTabibitoCode.Extensions;
 using GensouNoTabibito.GensouNoTabibitoCode.Localization;
 using GensouNoTabibito.GensouNoTabibitoCode.Weapons;
+using GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors;
 
 namespace GensouNoTabibito.GensouNoTabibitoCode.Relics;
 
@@ -260,31 +261,31 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
         return true;
     }
 
-    public void DraftWeaponFromReward()
+    public void DraftWeaponFromReward(WeaponState weapon)
     {
         var slot = GetWeaponSlot();
-        slot.EquipWeapon(CreateRandomWeapon());
+        slot.EquipWeapon(weapon);
 
         SyncSavedWeaponFromPlayerSlot(Owner);
         InvokeDisplayAmountChanged();
     }
 
-    public void DraftPrimaryWeaponFromReward()
+    public void DraftPrimaryWeaponFromReward(WeaponState weapon)
     {
         var slot = GetWeaponSlot();
-        slot.ReplaceWeapon(CreateRandomWeapon());
+        slot.ReplaceWeapon(weapon);
 
         SyncSavedWeaponFromPlayerSlot(Owner);
         InvokeDisplayAmountChanged();
     }
 
-    public void DraftSecondaryWeaponFromReward()
+    public void DraftSecondaryWeaponFromReward(WeaponState weapon)
     {
         var slot = GetWeaponSlot();
         if (!slot.CanHoldSecondaryWeapon)
             return;
 
-        slot.ReplaceSecondaryWeapon(CreateRandomWeapon());
+        slot.ReplaceSecondaryWeapon(weapon);
 
         SyncSavedWeaponFromPlayerSlot(Owner);
         InvokeDisplayAmountChanged();
@@ -316,6 +317,26 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
         InvokeDisplayAmountChanged();
     }
 
+    public void DiscardPrimaryWeaponFromReward()
+    {
+        var slot = GetWeaponSlot();
+        if (!slot.DiscardPrimaryWeapon())
+            return;
+
+        SyncSavedWeaponFromPlayerSlot(Owner);
+        InvokeDisplayAmountChanged();
+    }
+
+    public void DiscardSecondaryWeaponFromReward()
+    {
+        var slot = GetWeaponSlot();
+        if (!slot.DiscardSecondaryWeapon())
+            return;
+
+        SyncSavedWeaponFromPlayerSlot(Owner);
+        InvokeDisplayAmountChanged();
+    }
+
     public override bool ShouldAddToDeck(CardModel card)
     {
         return card is not WeaponRewardActionCard || !ReferenceEquals(card.Owner, Owner);
@@ -339,8 +360,9 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
         ReplacedWeaponRewards.Remove(sourceReward);
         ReplacedWeaponRewards.Add(sourceReward, WeaponRewardReplacementMarker);
 
+        var alternatives = CardRewardAlternative.Generate(sourceReward);
         if (CardRewardCurrentlyShownScreenField.GetValue(sourceReward) is NCardRewardSelectionScreen screen)
-            screen.RefreshOptions(cards, Array.Empty<CardRewardAlternative>());
+            screen.RefreshOptions(cards, alternatives);
 
         return Task.CompletedTask;
     }
@@ -358,7 +380,7 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
             if (slot.CanUpgradeCurrentWeapon)
                 yield return Owner.RunState.CreateCard<UpgradeWeaponReward>(Owner);
 
-            yield return Owner.RunState.CreateCard<DraftWeaponReward>(Owner);
+            yield return CreateDraftWeaponRewardCard<DraftWeaponReward>();
             yield break;
         }
 
@@ -368,8 +390,22 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
         if (slot.CanUpgradeSecondaryWeapon)
             yield return Owner.RunState.CreateCard<UpgradeSecondaryWeaponReward>(Owner);
 
-        yield return Owner.RunState.CreateCard<DraftPrimaryWeaponReward>(Owner);
-        yield return Owner.RunState.CreateCard<DraftSecondaryWeaponReward>(Owner);
+        if (slot.SecondaryWeapon != null)
+        {
+            yield return Owner.RunState.CreateCard<DiscardSecondaryWeaponReward>(Owner);
+            yield return Owner.RunState.CreateCard<DiscardPrimaryWeaponReward>(Owner);
+        }
+
+        yield return CreateDraftWeaponRewardCard<DraftPrimaryWeaponReward>();
+        yield return CreateDraftWeaponRewardCard<DraftSecondaryWeaponReward>();
+    }
+
+    private TCard CreateDraftWeaponRewardCard<TCard>()
+        where TCard : DraftWeaponRewardCard
+    {
+        var card = Owner.RunState.CreateCard<TCard>(Owner);
+        card.SetDraftedWeapon(CreateRandomWeapon());
+        return card;
     }
 
     private static WeaponState CreateRandomWeapon()

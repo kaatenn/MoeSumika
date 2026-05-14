@@ -15,11 +15,14 @@ public sealed class WeaponState
     public int Level { get; private set; }
     public int UpgradeCount { get; private set; }
 
-    public int SwordSkillLevel => Kind == WeaponKind.Sword ? Level : 0;
-
     public static WeaponState CreateBrokenSword()
     {
         return new WeaponState("GENSOUNOTABIBITO-BROKEN_SWORD", WeaponKind.Sword, 1, 0);
+    }
+
+    public static WeaponState CreateLightSword()
+    {
+        return new WeaponState("GENSOUNOTABIBITO-LIGHT_SWORD", WeaponKind.Sword, 1, 0);
     }
 
     public static WeaponState Create(string id, WeaponKind kind, int level, int upgradeCount)

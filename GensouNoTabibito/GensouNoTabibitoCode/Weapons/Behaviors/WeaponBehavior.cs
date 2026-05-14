@@ -1,9 +1,12 @@
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Rooms;
+using MegaCrit.Sts2.Core.ValueProps;
 
 namespace GensouNoTabibito.GensouNoTabibitoCode.Weapons;
 
@@ -51,6 +54,17 @@ public abstract class WeaponBehavior : IWeaponBehavior
         CombatSide side)
     {
         return Task.CompletedTask;
+    }
+
+    public virtual decimal ModifyDamageAdditive(
+        WeaponState weapon,
+        Creature? target,
+        decimal amount,
+        ValueProp props,
+        Creature? dealer,
+        CardModel? cardSource)
+    {
+        return 0m;
     }
 
     public virtual IEnumerable<IHoverTip> GetHoverTips(WeaponState weapon)

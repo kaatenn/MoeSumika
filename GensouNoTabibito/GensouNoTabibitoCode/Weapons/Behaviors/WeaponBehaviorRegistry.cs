@@ -1,9 +1,12 @@
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Rooms;
+using MegaCrit.Sts2.Core.ValueProps;
 using GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors.Bow;
 using GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors.Staff;
 using GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors.Sword;
@@ -66,6 +69,23 @@ public static class WeaponBehaviorRegistry
         CombatSide side)
     {
         return ForEach(slot, weapon => Get(weapon).BeforeTurnEnd(weapon, player, choiceContext, side));
+    }
+
+    public static decimal ModifyDamageAdditive(
+        WeaponSlotState slot,
+        Creature? target,
+        decimal amount,
+        ValueProp props,
+        Creature? dealer,
+        CardModel? cardSource)
+    {
+        return slot.Weapons.Sum(weapon => Get(weapon).ModifyDamageAdditive(
+            weapon,
+            target,
+            amount,
+            props,
+            dealer,
+            cardSource));
     }
 
     public static IEnumerable<IHoverTip> GetHoverTips(WeaponState weapon)

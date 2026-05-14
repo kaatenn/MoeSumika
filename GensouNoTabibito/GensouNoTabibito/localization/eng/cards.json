@@ -14,5 +14,9 @@
   "GENSOUNOTABIBITO-BAKED_SWEET_POTATO.description": "Gain {Energy:energyIcons()}.\nRemove all [gold]Debuffs[/gold] from yourself.\nWhen [gold]Retained[/gold], increase this card's Energy by {Increase:energyIcons()}.",
   "GENSOUNOTABIBITO-BAKED_SWEET_POTATO.title": "Baked Sweet Potato",
   "GENSOUNOTABIBITO-SWORD_ART_KENZAKI_FUSOU.description": "Deal {Damage:diff()} damage.\nLose {PowerAmount:diff()} [gold]Iai[/gold]. Gain {PowerAmount:diff()} [gold]Battou[/gold].\nWhen you gain [gold]Iai[/gold], return this card to your [gold]Hand[/gold].",
-  "GENSOUNOTABIBITO-SWORD_ART_KENZAKI_FUSOU.title": "Sword Art: Kenzaki Fusou"
+  "GENSOUNOTABIBITO-SWORD_ART_KENZAKI_FUSOU.title": "Sword Art: Kenzaki Fusou",
+  "GENSOUNOTABIBITO-DRAFT_WEAPON_REWARD.description": "Draft a random weapon.",
+  "GENSOUNOTABIBITO-DRAFT_WEAPON_REWARD.title": "Draft Weapon",
+  "GENSOUNOTABIBITO-UPGRADE_WEAPON_REWARD.description": "Upgrade your current weapon.",
+  "GENSOUNOTABIBITO-UPGRADE_WEAPON_REWARD.title": "Upgrade Weapon"
 }

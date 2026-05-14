@@ -1,15 +1,26 @@
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using MegaCrit.Sts2.Core.Combat;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.CardRewardAlternatives;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.Entities.Rewards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Nodes.Screens.CardSelection;
 using MegaCrit.Sts2.Core.Rewards;
+using MegaCrit.Sts2.Core.Runs;
 using MegaCrit.Sts2.Core.Rooms;
 using MegaCrit.Sts2.Core.Saves.Runs;
+using MegaCrit.Sts2.Core.ValueProps;
+using GensouNoTabibito.GensouNoTabibitoCode.Cards;
+using GensouNoTabibito.GensouNoTabibitoCode.Cards.Actions;
 using GensouNoTabibito.GensouNoTabibitoCode.Extensions;
 using GensouNoTabibito.GensouNoTabibitoCode.Localization;
 using GensouNoTabibito.GensouNoTabibitoCode.Weapons;
@@ -18,6 +29,9 @@ namespace GensouNoTabibito.GensouNoTabibitoCode.Relics;
 
 public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
 {
+    private const int MaxCardRewardAlternatives = 2;
+
+    private const string WeaponRewardAlternativeId = "GENSOUNOTABIBITO-WEAPON_REWARD";
     private const string DraftWeaponAlternativeId = "GENSOUNOTABIBITO-DRAFT_WEAPON";
     private const string UpgradeWeaponAlternativeId = "GENSOUNOTABIBITO-UPGRADE_WEAPON";
 
@@ -26,6 +40,22 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
     private const string SecondaryWeaponNameKey = "SecondaryWeaponName";
     private const string SecondaryWeaponLevelTextKey = "SecondaryWeaponLevelText";
 
+    private static readonly object WeaponRewardReplacementMarker = new();
+    private static readonly ConditionalWeakTable<CardReward, object> ReplacedWeaponRewards = new();
+
+    private static readonly FieldInfo CardRewardCardsField =
+        typeof(CardReward).GetField("_cards", BindingFlags.Instance | BindingFlags.NonPublic)
+        ?? throw new MissingFieldException(typeof(CardReward).FullName, "_cards");
+
+    private static readonly FieldInfo CardRewardCurrentlyShownScreenField =
+        typeof(CardReward).GetField("_currentlyShownScreen", BindingFlags.Instance | BindingFlags.NonPublic)
+        ?? throw new MissingFieldException(typeof(CardReward).FullName, "_currentlyShownScreen");
+
+    private static readonly Func<WeaponState>[] WeaponDraftPool =
+    [
+        WeaponState.CreateBrokenSword,
+        WeaponState.CreateLightSword
+    ];
 
     public override RelicRarity Rarity => RelicRarity.Starter;
     public override bool ShouldReceiveCombatHooks => true;
@@ -73,6 +103,20 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
             foreach (var tip in WeaponBehaviorRegistry.GetHoverTips(weapon))
                 yield return tip;
         }
+    }
+
+    public HoverTip CreateCurrentHoverTip()
+    {
+        var primaryWeapon = GetPrimaryWeaponForDescription();
+        var secondaryWeapon = GetSecondaryWeaponForDescription();
+        var description = new LocString("relics", "GENSOUNOTABIBITO-WEAPON_BAG_RELIC.description");
+
+        description.Add(PrimaryWeaponNameKey, WeaponLocalization.GetTitle(primaryWeapon));
+        description.Add(PrimaryWeaponLevelTextKey, GetWeaponLevelText(primaryWeapon));
+        description.Add(SecondaryWeaponNameKey, WeaponLocalization.GetTitle(secondaryWeapon));
+        description.Add(SecondaryWeaponLevelTextKey, GetWeaponLevelText(secondaryWeapon));
+
+        return new HoverTip(Title, description);
     }
 
     public void SyncSavedWeaponFromPlayerSlot(Player player)
@@ -179,6 +223,20 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
         return WeaponBehaviorRegistry.BeforeTurnEnd(slot, Owner, choiceContext, side);
     }
 
+    public override decimal ModifyDamageAdditive(
+        Creature? target,
+        decimal amount,
+        ValueProp props,
+        Creature? dealer,
+        CardModel? cardSource)
+    {
+        if (cardSource?.Owner == null || !ReferenceEquals(cardSource.Owner.Creature, Owner.Creature))
+            return 0m;
+
+        var slot = EnsureWeaponSlotEquipped();
+        return WeaponBehaviorRegistry.ModifyDamageAdditive(slot, target, amount, props, dealer, cardSource);
+    }
+
     public override bool TryModifyCardRewardAlternatives(
         Player player,
         CardReward cardReward,
@@ -187,38 +245,86 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
         if (!ReferenceEquals(player, Owner))
             return false;
 
-        var slot = EnsureWeaponSlotEquipped();
-        if (!slot.CanUpgradeCurrentWeapon)
+        if (alternatives.Count >= MaxCardRewardAlternatives)
             return false;
 
+        if (ReplacedWeaponRewards.TryGetValue(cardReward, out _))
+            return false;
+
+        EnsureWeaponSlotEquipped();
         alternatives.Add(new CardRewardAlternative(
-            UpgradeWeaponAlternativeId,
-            UpgradeWeapon,
-            PostAlternateCardRewardAction.EndSelectionAndCompleteReward));
+            WeaponRewardAlternativeId,
+            () => ReplaceCardRewardWithWeaponActions(cardReward),
+            0));
 
         return true;
     }
 
-    private Task DraftWeapon()
+    public void DraftWeaponFromReward()
     {
         var slot = GetWeaponSlot();
-        slot.EnsureWeaponEquipped(WeaponState.CreateBrokenSword());
+        slot.EquipWeapon(CreateRandomWeapon());
 
-        // TODO: Generate weapon choices, show a keep/discard selection UI, and call slot.EquipWeapon
-        // if the player keeps one. For now, this is intentionally a no-op placeholder.
-        return Task.CompletedTask;
+        SyncSavedWeaponFromPlayerSlot(Owner);
+        InvokeDisplayAmountChanged();
     }
 
-    private Task UpgradeWeapon()
+    public void UpgradeWeaponFromReward()
     {
         var slot = GetWeaponSlot();
         slot.EnsureWeaponEquipped(WeaponState.CreateBrokenSword());
         if (!slot.UpgradeCurrentWeapon())
-            return Task.CompletedTask;
+            return;
 
         SyncSavedWeaponFromPlayerSlot(Owner);
         InvokeDisplayAmountChanged();
+    }
+
+    public override bool ShouldAddToDeck(CardModel card)
+    {
+        return card is not WeaponRewardActionCard || !ReferenceEquals(card.Owner, Owner);
+    }
+
+    public override Task AfterAddToDeckPrevented(CardModel card)
+    {
+        if (card is WeaponRewardActionCard weaponRewardAction && ReferenceEquals(card.Owner, Owner))
+            weaponRewardAction.Resolve(this);
+
         return Task.CompletedTask;
+    }
+
+    private Task ReplaceCardRewardWithWeaponActions(CardReward sourceReward)
+    {
+        var cards = GetCardRewardCards(sourceReward);
+        cards.Clear();
+        cards.AddRange(CreateWeaponRewardCards().Select(card => new CardCreationResult(card)));
+
+        sourceReward.CanReroll = false;
+        ReplacedWeaponRewards.Remove(sourceReward);
+        ReplacedWeaponRewards.Add(sourceReward, WeaponRewardReplacementMarker);
+
+        if (CardRewardCurrentlyShownScreenField.GetValue(sourceReward) is NCardRewardSelectionScreen screen)
+            screen.RefreshOptions(cards, Array.Empty<CardRewardAlternative>());
+
+        return Task.CompletedTask;
+    }
+
+    private static List<CardCreationResult> GetCardRewardCards(CardReward cardReward)
+    {
+        return (List<CardCreationResult>)CardRewardCardsField.GetValue(cardReward)!;
+    }
+
+    private IEnumerable<CardModel> CreateWeaponRewardCards()
+    {
+        if (GetWeaponSlot().CanUpgradeCurrentWeapon)
+            yield return Owner.RunState.CreateCard<UpgradeWeaponReward>(Owner);
+
+        yield return Owner.RunState.CreateCard<DraftWeaponReward>(Owner);
+    }
+
+    private static WeaponState CreateRandomWeapon()
+    {
+        return WeaponDraftPool[Random.Shared.Next(WeaponDraftPool.Length)]();
     }
 
     private WeaponState EnsureWeaponEquipped()

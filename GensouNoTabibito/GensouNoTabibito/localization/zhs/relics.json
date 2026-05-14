@@ -4,5 +4,7 @@
   "GENSOUNOTABIBITO-WEAPON_BAG_RELIC.title": "武器背包",
   "GENSOUNOTABIBITO-BROKEN_SWORD.weaponDescription": "[gold]剑类武器[/gold]。战斗开始时，获得[gold]闪亮登场[/gold]。等级达到2时，获得[gold]闪亮登场+[/gold]。",
   "GENSOUNOTABIBITO-BROKEN_SWORD.weaponTitle": "破刀",
+  "GENSOUNOTABIBITO-LIGHT_SWORD.weaponDescription": "[gold]剑类武器[/gold]。战斗开始时，获得 1/1/2/2/3 点[gold]敏捷[/gold]。所有剑技牌造成的伤害增加 [blue]2[/blue] 点。",
+  "GENSOUNOTABIBITO-LIGHT_SWORD.weaponTitle": "轻剑",
   "GENSOUNOTABIBITO-NONE.weaponTitle": "无"
 }

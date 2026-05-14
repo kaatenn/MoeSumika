@@ -23,5 +23,6 @@ public partial class MainFile : Node
 
         harmony.PatchAll();
         WeaponBehaviorRegistry.Register("GENSOUNOTABIBITO-BROKEN_SWORD", new BrokenSwordBehavior());
+        WeaponBehaviorRegistry.Register("GENSOUNOTABIBITO-LIGHT_SWORD", new LightSwordBehavior());
     }
 }

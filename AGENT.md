@@ -82,6 +82,47 @@ Card reward option localization uses `localization/{locale}/card_reward_ui.json`
 - `OPTION_GENSOUNOTABIBITO-DRAFT_WEAPON.name`
 - `OPTION_GENSOUNOTABIBITO-UPGRADE_WEAPON.name`
 
+Current `WeaponBagRelic.TryModifyCardRewardAlternatives` uses one top-level weapon card-reward replacement action to respect the two-alternative UI limit:
+
+- The top-level option is `OPTION_GENSOUNOTABIBITO-WEAPON_REWARD.name`.
+- Selecting it mutates the current `CardReward` in place: it replaces the reward's private `_cards` list with weapon action cards and refreshes the current `NCardRewardSelectionScreen`.
+- The replacement options can offer `UpgradeWeaponReward` and `DraftWeaponReward`, so players may draft a new weapon before the current weapon is fully upgraded.
+- `DRAFT_WEAPON` currently rolls from the weapon draft pool in `WeaponBagRelic`.
+- The action cards live under `GensouNoTabibitoCode/Cards/Actions/` and use `WeaponActionCardPool`. Keep them `autoAdd: false` and hidden from the card library.
+- `WeaponRewardActionCard` must explicitly override `Pool` and `VisualCardPool`; otherwise `NCard` rendering can fall through to `MockCardPool` and throw `You monster!`.
+- `ShouldAddToDeck` only blocks weapon action cards from entering the deck. Resolve their effect in `AfterAddToDeckPrevented`, because returning `false` from `ShouldAddToDeck` prevents `TryModifyCardBeingAddedToDeck` from running.
+- `InvokeDisplayAmountChanged()` only updates relic display amount UI. It does not rebuild the main relic description hover tip. `WeaponBagRelicHoverTipPatch` patches `RelicModel.get_HoverTip` for `WeaponBagRelic` only and rebuilds the main hover tip description with current weapon names and levels.
+
+Current concrete weapons:
+
+- Broken Sword: `GENSOUNOTABIBITO-BROKEN_SWORD`, sword weapon, max level 2.
+- Light Sword: `GENSOUNOTABIBITO-LIGHT_SWORD`, sword weapon, max level 5. At combat start it grants 1/1/2/2/3 Dexterity by level, and all Sword Skill tagged cards deal +2 damage while any equipped weapon is Light Sword.
+
+## Temporary Custom Reward Note
+
+Remove this section from `AGENT.md` once the knowledge is used to implement the future upgraded WeaponBag-style relic.
+
+`CardRewardAlternative.Generate` supports at most two total alternatives, including vanilla `Skip` and `REROLL`. Do not use multiple card reward alternatives for weapon actions such as "draft weapon" plus "upgrade weapon"; they can exceed the hard UI limit.
+
+For the future upgraded WeaponBag-style relic, the intended behavior is "can upgrade weapons" rather than "replace a card reward with upgrade weapon". Investigate and likely use BaseLib's `CustomReward` for a standalone weapon reward instead of replacing card reward alternatives. This should allow weapon rewards to appear as their own reward entry and avoid the two-alternative limit.
+
+Confirmed `CustomReward` details:
+
+- Define a custom reward type with a static `[CustomEnum] public static RewardType ...;` field on the `CustomReward` subclass.
+- The `CustomReward` subclass must have a public parameterless constructor because BaseLib creates an instance during `ModelDb.Init` enum generation.
+- `ToSerializable()` must return a `SerializableReward` whose `RewardType` is the generated custom reward type, not `None` or a base-game `RewardType`.
+- BaseLib automatically calls `Initialize()` for valid `CustomReward` classes during enum generation; do not manually register it unless the automatic path is intentionally bypassed.
+- Add future standalone weapon rewards from an owning relic with `TryModifyRewards(Player player, List<Reward> rewards, AbstractRoom? room)`, not with `TryModifyCardRewardAlternatives`.
+- `RewardsSet.GenerateWithoutOffering()` populates existing rewards, calls `Hook.ModifyRewards`, then populates newly added rewards before sorting by `RewardsSetIndex`.
+
+Reference investigation targets:
+
+- `BaseLib.Abstracts.CustomReward`
+- `MegaCrit.Sts2.Core.Rewards.Reward`
+- `MegaCrit.Sts2.Core.Rewards.SerializableReward`
+- `BaseLib.Patches.Content.CustomRewardPatches.RegisterCustomReward`
+- Vanilla reward implementations that override reward description, icon, populate/claim/serialization behavior.
+
 ## Power Implementation Guidelines
 
 Important files:

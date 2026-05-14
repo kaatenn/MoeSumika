@@ -9,7 +9,7 @@ using MegaCrit.Sts2.Core.Models;
 
 namespace GensouNoTabibito.GensouNoTabibitoCode.Cards.Actions;
 
-[Pool(typeof(GensouNoTabibitoCardPool))]
+[Pool(typeof(WeaponActionCardPool))]
 public abstract class WeaponRewardActionCard() : CustomCardModel(
     -1,
     CardType.Status,
@@ -20,7 +20,7 @@ public abstract class WeaponRewardActionCard() : CustomCardModel(
 {
     public override int MaxUpgradeLevel => 0;
     public override bool CanBeGeneratedInCombat => false;
-    public override CardPoolModel Pool => ModelDb.CardPool<GensouNoTabibitoCardPool>();
+    public override CardPoolModel Pool => ModelDb.CardPool<WeaponActionCardPool>();
     public override CardPoolModel VisualCardPool => Pool;
     public override string CustomPortraitPath => "relic.png".BigRelicImagePath();
     public override string PortraitPath => "relic.png".RelicImagePath();

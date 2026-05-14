@@ -2,9 +2,6 @@ using Godot;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Modding;
-using GensouNoTabibito.GensouNoTabibitoCode.Weapons;
-using GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors;
-using GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors.Sword;
 using Logger = MegaCrit.Sts2.Core.Logging.Logger;
 
 namespace GensouNoTabibito.GensouNoTabibitoCode;
@@ -23,7 +20,6 @@ public partial class MainFile : Node
         Harmony harmony = new(ModId);
 
         harmony.PatchAll();
-        WeaponBehaviorRegistry.Register("GENSOUNOTABIBITO-BROKEN_SWORD", new BrokenSwordBehavior());
-        WeaponBehaviorRegistry.Register("GENSOUNOTABIBITO-LIGHT_SWORD", new LightSwordBehavior());
+        Registry.Register();
     }
 }

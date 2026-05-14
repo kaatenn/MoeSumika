@@ -15,7 +15,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors;
 
-public static class WeaponBehaviorRegistry
+public static class WeaponBehaviorHookBridge
 {
     private const int DualWieldSwordSkill = 10;
 

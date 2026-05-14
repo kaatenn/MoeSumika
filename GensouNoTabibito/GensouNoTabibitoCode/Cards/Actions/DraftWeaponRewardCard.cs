@@ -20,7 +20,7 @@ public abstract class DraftWeaponRewardCard : WeaponRewardActionCard
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         DraftedWeapon == null
             ? []
-            : WeaponBehaviorRegistry.GetHoverTips(DraftedWeapon);
+            : WeaponBehaviorHookBridge.GetHoverTips(DraftedWeapon);
 
     public void SetDraftedWeapon(WeaponState weapon)
     {

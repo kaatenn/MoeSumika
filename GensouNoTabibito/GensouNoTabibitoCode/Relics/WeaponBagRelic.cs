@@ -101,7 +101,7 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
         get
         {
             foreach (var weapon in GetWeaponsForDescription())
-            foreach (var tip in WeaponBehaviorRegistry.GetHoverTips(weapon))
+            foreach (var tip in WeaponBehaviorHookBridge.GetHoverTips(weapon))
                 yield return tip;
         }
     }
@@ -191,37 +191,37 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
     public override Task BeforeCombatStart()
     {
         var slot = EnsureWeaponSlotEquipped();
-        return WeaponBehaviorRegistry.BeforeCombatStart(slot, Owner);
+        return WeaponBehaviorHookBridge.BeforeCombatStart(slot, Owner);
     }
 
     public override async Task AfterRoomEntered(AbstractRoom room)
     {
         var slot = EnsureWeaponSlotEquipped();
-        await WeaponBehaviorRegistry.AfterRoomEntered(slot, Owner, room);
+        await WeaponBehaviorHookBridge.AfterRoomEntered(slot, Owner, room);
     }
 
     public override Task AfterSideTurnStart(CombatSide side, ICombatState combatState)
     {
         var slot = EnsureWeaponSlotEquipped();
-        return WeaponBehaviorRegistry.AfterSideTurnStart(slot, Owner, side, combatState);
+        return WeaponBehaviorHookBridge.AfterSideTurnStart(slot, Owner, side, combatState);
     }
 
     public override Task BeforeCardPlayed(CardPlay cardPlay)
     {
         var slot = EnsureWeaponSlotEquipped();
-        return WeaponBehaviorRegistry.BeforeCardPlayed(slot, Owner, cardPlay);
+        return WeaponBehaviorHookBridge.BeforeCardPlayed(slot, Owner, cardPlay);
     }
 
     public override Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         var slot = EnsureWeaponSlotEquipped();
-        return WeaponBehaviorRegistry.AfterCardPlayed(slot, Owner, choiceContext, cardPlay);
+        return WeaponBehaviorHookBridge.AfterCardPlayed(slot, Owner, choiceContext, cardPlay);
     }
 
     public override Task BeforeTurnEnd(PlayerChoiceContext choiceContext, CombatSide side)
     {
         var slot = EnsureWeaponSlotEquipped();
-        return WeaponBehaviorRegistry.BeforeTurnEnd(slot, Owner, choiceContext, side);
+        return WeaponBehaviorHookBridge.BeforeTurnEnd(slot, Owner, choiceContext, side);
     }
 
     public override decimal ModifyDamageAdditive(
@@ -235,7 +235,7 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
             return 0m;
 
         var slot = EnsureWeaponSlotEquipped();
-        return WeaponBehaviorRegistry.ModifyDamageAdditive(slot, target, amount, props, dealer, cardSource);
+        return WeaponBehaviorHookBridge.ModifyDamageAdditive(slot, target, amount, props, dealer, cardSource);
     }
 
     public override bool TryModifyCardRewardAlternatives(

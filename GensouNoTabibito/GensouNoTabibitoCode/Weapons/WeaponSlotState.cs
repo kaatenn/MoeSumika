@@ -11,8 +11,8 @@ public sealed class WeaponSlotState
 
     public bool HasWeapon => PrimaryWeapon != null;
     public bool CanHoldSecondaryWeapon => PrimaryWeapon?.Kind == WeaponKind.Sword;
-    public bool CanUpgradeCurrentWeapon => PrimaryWeapon != null && WeaponBehaviorRegistry.CanUpgrade(PrimaryWeapon);
-    public bool CanUpgradeSecondaryWeapon => SecondaryWeapon != null && WeaponBehaviorRegistry.CanUpgrade(SecondaryWeapon);
+    public bool CanUpgradeCurrentWeapon => PrimaryWeapon != null && WeaponBehaviorHookBridge.CanUpgrade(PrimaryWeapon);
+    public bool CanUpgradeSecondaryWeapon => SecondaryWeapon != null && WeaponBehaviorHookBridge.CanUpgrade(SecondaryWeapon);
 
     public IEnumerable<WeaponState> Weapons
     {
@@ -97,7 +97,7 @@ public sealed class WeaponSlotState
         if (PrimaryWeapon == null)
             return false;
 
-        return WeaponBehaviorRegistry.TryUpgrade(PrimaryWeapon);
+        return WeaponBehaviorHookBridge.TryUpgrade(PrimaryWeapon);
     }
 
     public bool UpgradeSecondaryWeapon()
@@ -105,7 +105,7 @@ public sealed class WeaponSlotState
         if (SecondaryWeapon == null)
             return false;
 
-        return WeaponBehaviorRegistry.TryUpgrade(SecondaryWeapon);
+        return WeaponBehaviorHookBridge.TryUpgrade(SecondaryWeapon);
     }
 
     private void EnforceCapacity()

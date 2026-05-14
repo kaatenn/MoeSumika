@@ -46,6 +46,7 @@ Notes from this environment:
 - Keep C# nullable-aware; the project has `<Nullable>enable</Nullable>`.
 - Prefer existing BaseLib and StS2 APIs over new infrastructure.
 - Keep gameplay wiring close to the owning model: relics receive game hooks, then delegate to weapon behavior services.
+- Keep startup registration out of `MainFile.Initialize()` where possible. `MainFile` should patch Harmony and then call the top-level `Registry.Register()` method; add future manual registrations under `GensouNoTabibitoCode/Registry.cs`.
 - Do not rewrite generated `.uid`, `.import`, `.godot`, or asset metadata files unless the task explicitly requires it.
 - The working tree may contain user edits. Do not revert unrelated changes.
 
@@ -59,6 +60,12 @@ Card model files live under `GensouNoTabibitoCode/Cards/`. Current custom-card w
 - `GensouNoTabibitoCode/Cards/SwordArtWindrend.cs`
 - `GensouNoTabibitoCode/Cards/BakedSweetPotato.cs`
 - `GensouNoTabibitoCode/Cards/SwordArtKenzakiFusou.cs`
+
+Card pool and color notes:
+
+- `GensouNoTabibitoCardPool` is the character card pool.
+- `WeaponActionCardPool` is the separate shared pool for reward action/status cards only.
+- Both pools use `GensouNoTabibitoCardColors.CardBackPink` (`#F08BB8`) for `ShaderColor` and `DeckEntryCardColor`, so large card backs and small deck-entry/card-bottom colors stay consistent.
 
 Power model files live under `GensouNoTabibitoCode/Powers/`. Current power work includes:
 
@@ -98,9 +105,9 @@ Current `WeaponBagRelic.TryModifyCardRewardAlternatives` uses one top-level weap
 - The replacement options can offer generic `UpgradeWeaponReward` / `DraftWeaponReward` when no secondary slot is available, or slot-specific `UpgradePrimaryWeaponReward`, `UpgradeSecondaryWeaponReward`, `DraftPrimaryWeaponReward`, and `DraftSecondaryWeaponReward` when a sword primary enables the secondary slot.
 - When both primary and secondary weapons are equipped, the replacement options also offer `DiscardSecondaryWeaponReward` and `DiscardPrimaryWeaponReward`. Discarding the primary weapon promotes the secondary weapon into the primary slot and clears the secondary slot.
 - Draft reward cards inherit `DraftWeaponRewardCard`. The random `WeaponState` is created when reward cards are generated, then stored on the card so the card description and hover tips show the exact weapon before the player chooses it. Resolving the card equips that stored weapon; do not reroll in `Resolve`.
-- Draft reward card descriptions use the `DraftedWeaponName` DynamicVar and `ExtraHoverTips` delegates to `WeaponBehaviorRegistry.GetHoverTips(DraftedWeapon)`.
+- Draft reward card descriptions use the `DraftedWeaponName` DynamicVar and `ExtraHoverTips` delegates to `WeaponBehaviorHookBridge.GetHoverTips(DraftedWeapon)`.
 - `DRAFT_WEAPON` rolls from the weapon draft pool in `WeaponBagRelic`.
-- The action cards live under `GensouNoTabibitoCode/Cards/Actions/` and use `WeaponActionCardPool`. Keep them `autoAdd: false` and hidden from the card library.
+- The action cards live under `GensouNoTabibitoCode/Cards/Actions/` and use `WeaponActionCardPool`, a separate shared `CustomCardPoolModel`. Keep them `autoAdd: false` and hidden from the card library. `WeaponRewardActionCard` must use `[Pool(typeof(WeaponActionCardPool))]`, `Pool => ModelDb.CardPool<WeaponActionCardPool>()`, and `VisualCardPool => Pool`.
 - `WeaponRewardActionCard` must explicitly override `Pool` and `VisualCardPool`; otherwise `NCard` rendering can fall through to `MockCardPool` and throw `You monster!`.
 - `ShouldAddToDeck` only blocks weapon action cards from entering the deck. Resolve their effect in `AfterAddToDeckPrevented`, because returning `false` from `ShouldAddToDeck` prevents `TryModifyCardBeingAddedToDeck` from running.
 - `InvokeDisplayAmountChanged()` only updates relic display amount UI. It does not rebuild the main relic description hover tip. `WeaponBagRelicHoverTipPatch` patches `RelicModel.get_HoverTip` for `WeaponBagRelic` only and rebuilds the main hover tip description with current weapon names and levels.
@@ -109,7 +116,7 @@ Current concrete weapons:
 
 - Broken Sword: `GENSOUNOTABIBITO-BROKEN_SWORD`, sword weapon, max level 2.
 - Light Sword: `GENSOUNOTABIBITO-LIGHT_SWORD`, sword weapon, max level 5. At combat start it grants 1/1/2/2/3 Dexterity by level, and all Sword Skill tagged cards deal +2 damage while any equipped weapon is Light Sword.
-- Dual wield restriction: when both primary and secondary weapons are equipped, `WeaponBehaviorRegistry` does not dispatch normal weapon behavior hooks or additive damage modifiers. `BeforeCombatStart` only applies 10 stacks of `SwordSkill`; all other weapon special effects are disabled.
+- Dual wield restriction: when both primary and secondary weapons are equipped, `WeaponBehaviorHookBridge` does not dispatch normal weapon behavior hooks or additive damage modifiers. `BeforeCombatStart` only applies 10 stacks of `SwordSkill`; all other weapon special effects are disabled.
 
 ## Temporary Custom Reward Note
 
@@ -259,7 +266,7 @@ Important files:
 - `GensouNoTabibitoCode/Weapons/Sync/WeaponNetworkState.cs`
 - `GensouNoTabibitoCode/Weapons/Behaviors/IWeaponBehavior.cs`
 - `GensouNoTabibitoCode/Weapons/Behaviors/WeaponBehavior.cs`
-- `GensouNoTabibitoCode/Weapons/Behaviors/WeaponBehaviorRegistry.cs`
+- `GensouNoTabibitoCode/Weapons/Behaviors/WeaponBehaviorHookBridge.cs`
 - `GensouNoTabibitoCode/Weapons/Behaviors/Sword/SwordBehavior.cs`
 - `GensouNoTabibitoCode/Weapons/Behaviors/Sword/BrokenSwordBehavior.cs`
 - `GensouNoTabibitoCode/Weapons/Behaviors/Staff/StaffBehavior.cs`
@@ -273,10 +280,10 @@ Important files:
 - Ensures the player has a broken sword equipped by default.
 - Receives relic/game hooks.
 - Gets the owner's `WeaponSlotState`.
-- Delegates to `WeaponBehaviorRegistry`.
+- Delegates to `WeaponBehaviorHookBridge`.
 - Carries saved weapon-slot state through `[SavedProperty]`.
 - Uses dynamic relic description variables for weapon names and levels only.
-- Aggregates weapon-specific hover tips from `WeaponBehaviorRegistry`; long weapon descriptions and weapon effect details belong to behaviors, not the relic description body.
+- Aggregates weapon-specific hover tips from `WeaponBehaviorHookBridge`; long weapon descriptions and weapon effect details belong to behaviors, not the relic description body.
 - Only exposes the upgrade reward when `WeaponSlotState.CanUpgradeCurrentWeapon` is true.
 - Calls `InvokeDisplayAmountChanged()` after a successful weapon upgrade so the relic description re-renders dynamic weapon level text.
 
@@ -326,8 +333,8 @@ This matches vanilla-style relic code such as room-entry power application.
 To add a new weapon:
 
 1. Create a new `XXXBehavior` class in the appropriate `Behaviors/{WeaponKind}/` subfolder, extending `WeaponBehavior` (or a more specific subclass like `SwordBehavior`).
-2. If the weapon uses a custom ID, register it in `WeaponBehaviorRegistry.BehaviorsById` via `Register(id, behavior)`.
-3. If it is the default for a new `WeaponKind`, add it to `BehaviorsByKind`.
+2. Register the weapon from `Registry.Register()` by calling `WeaponBehaviorHookBridge.Register(id, behavior)`.
+3. If it is the default for a new `WeaponKind`, extend the hook bridge/default lookup there as needed.
 4. Override `MaxLevel` when the weapon should stop upgrading at a fixed level.
 5. Add `*.weaponTitle` and `*.weaponDescription` entries to `localization/eng/relics.json` and `localization/zhs/relics.json`.
 6. Put long effect explanations in the weapon hover tip via behavior/localization; keep `WeaponBagRelic.description` short enough to show only equipped weapon names and levels.
@@ -396,9 +403,9 @@ Example already implemented: `SwordBehavior.BeforeCombatStart` applies 5 stacks 
 - `PowerCmd` is under `MegaCrit.Sts2.Core.Commands`.
 - If a hook signature is changed in `IWeaponBehavior`, update all of:
   - `WeaponBehavior`
-  - `WeaponBehaviorRegistry`
+  - `WeaponBehaviorHookBridge`
   - every concrete behavior
-  - every relic or caller that dispatches to `WeaponBehaviorRegistry`
+  - every relic or caller that dispatches to `WeaponBehaviorHookBridge`
 - **Missing using directives**: When creating new Powers, ensure you have all required namespaces:
   - `MegaCrit.Sts2.Core.Entities.Powers` for `PowerType`, `PowerStackType`
   - `MegaCrit.Sts2.Core.Models` for `CardModel` and other model types

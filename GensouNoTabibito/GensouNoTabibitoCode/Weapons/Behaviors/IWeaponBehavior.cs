@@ -20,6 +20,7 @@ public interface IWeaponBehavior
     Task BeforeCardPlayed(WeaponState weapon, Player player, CardPlay cardPlay);
     Task AfterCardPlayed(WeaponState weapon, Player player, PlayerChoiceContext choiceContext, CardPlay cardPlay);
     Task BeforeTurnEnd(WeaponState weapon, Player player, PlayerChoiceContext choiceContext, CombatSide side);
+
     decimal ModifyDamageAdditive(
         WeaponState weapon,
         Creature? target,
@@ -27,5 +28,6 @@ public interface IWeaponBehavior
         ValueProp props,
         Creature? dealer,
         CardModel? cardSource);
+
     IEnumerable<IHoverTip> GetHoverTips(WeaponState weapon);
 }

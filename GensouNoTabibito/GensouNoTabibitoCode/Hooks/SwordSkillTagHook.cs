@@ -1,9 +1,9 @@
+using GensouNoTabibito.GensouNoTabibitoCode.Powers;
+using GensouNoTabibito.GensouNoTabibitoCode.Tags;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
-using GensouNoTabibito.GensouNoTabibitoCode.Powers;
-using GensouNoTabibito.GensouNoTabibitoCode.Tags;
 
 namespace GensouNoTabibito.GensouNoTabibitoCode.Hooks;
 

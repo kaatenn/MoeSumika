@@ -1,5 +1,5 @@
+using GensouNoTabibito.GensouNoTabibitoCode.Tags;
 using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -7,14 +7,13 @@ using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
-using GensouNoTabibito.GensouNoTabibitoCode.Tags;
 
 namespace GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors.Sword;
 
 public sealed class LightSwordBehavior : SwordBehavior
 {
-    private static readonly int[] DexterityByLevel = [1, 1, 2, 2, 3];
     private const decimal SwordSkillDamageBonus = 2m;
+    private static readonly int[] DexterityByLevel = [1, 1, 2, 2, 3];
 
     public override int MaxLevel => 5;
 

@@ -1,4 +1,3 @@
-using BaseLib.Extensions;
 using GensouNoTabibito.GensouNoTabibitoCode.Powers;
 using GensouNoTabibito.GensouNoTabibitoCode.Tags;
 using MegaCrit.Sts2.Core.Commands;

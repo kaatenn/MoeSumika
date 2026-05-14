@@ -12,7 +12,9 @@ public sealed class WeaponSlotState
     public bool HasWeapon => PrimaryWeapon != null;
     public bool CanHoldSecondaryWeapon => PrimaryWeapon?.Kind == WeaponKind.Sword;
     public bool CanUpgradeCurrentWeapon => PrimaryWeapon != null && WeaponBehaviorHookBridge.CanUpgrade(PrimaryWeapon);
-    public bool CanUpgradeSecondaryWeapon => SecondaryWeapon != null && WeaponBehaviorHookBridge.CanUpgrade(SecondaryWeapon);
+
+    public bool CanUpgradeSecondaryWeapon =>
+        SecondaryWeapon != null && WeaponBehaviorHookBridge.CanUpgrade(SecondaryWeapon);
 
     public IEnumerable<WeaponState> Weapons
     {

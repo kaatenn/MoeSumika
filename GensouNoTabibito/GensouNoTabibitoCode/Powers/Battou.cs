@@ -12,11 +12,11 @@ namespace GensouNoTabibito.GensouNoTabibitoCode.Powers;
 
 public class Battou : GensouNoTabibitoPower
 {
+    private const int RequiredSwordSkillAmount = 4;
     public override PowerType Type => Amount > 0 ? PowerType.Buff : PowerType.Debuff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
     public override bool AllowNegative => true;
-    private const int RequiredSwordSkillAmount = 4;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [

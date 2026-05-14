@@ -1,13 +1,16 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using GensouNoTabibito.GensouNoTabibitoCode.Cards.Actions;
+using GensouNoTabibito.GensouNoTabibitoCode.Extensions;
+using GensouNoTabibito.GensouNoTabibitoCode.Localization;
+using GensouNoTabibito.GensouNoTabibitoCode.Weapons;
+using GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors;
 using MegaCrit.Sts2.Core.Combat;
-using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.CardRewardAlternatives;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Relics;
-using MegaCrit.Sts2.Core.Entities.Rewards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
@@ -15,16 +18,9 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Nodes.Screens.CardSelection;
 using MegaCrit.Sts2.Core.Rewards;
-using MegaCrit.Sts2.Core.Runs;
 using MegaCrit.Sts2.Core.Rooms;
 using MegaCrit.Sts2.Core.Saves.Runs;
 using MegaCrit.Sts2.Core.ValueProps;
-using GensouNoTabibito.GensouNoTabibitoCode.Cards;
-using GensouNoTabibito.GensouNoTabibitoCode.Cards.Actions;
-using GensouNoTabibito.GensouNoTabibitoCode.Extensions;
-using GensouNoTabibito.GensouNoTabibitoCode.Localization;
-using GensouNoTabibito.GensouNoTabibitoCode.Weapons;
-using GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors;
 
 namespace GensouNoTabibito.GensouNoTabibitoCode.Relics;
 
@@ -106,20 +102,6 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
         }
     }
 
-    public HoverTip CreateCurrentHoverTip()
-    {
-        var primaryWeapon = GetPrimaryWeaponForDescription();
-        var secondaryWeapon = GetSecondaryWeaponForDescription();
-        var description = new LocString("relics", "GENSOUNOTABIBITO-WEAPON_BAG_RELIC.description");
-
-        description.Add(PrimaryWeaponNameKey, WeaponLocalization.GetTitle(primaryWeapon));
-        description.Add(PrimaryWeaponLevelTextKey, GetWeaponLevelText(primaryWeapon));
-        description.Add(SecondaryWeaponNameKey, WeaponLocalization.GetTitle(secondaryWeapon));
-        description.Add(SecondaryWeaponLevelTextKey, GetWeaponLevelText(secondaryWeapon));
-
-        return new HoverTip(Title, description);
-    }
-
     public void SyncSavedWeaponFromPlayerSlot(Player player)
     {
         var slot = player.GetWeaponSlot();
@@ -180,6 +162,20 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
             (WeaponKind)SavedSecondaryWeaponKind,
             SavedSecondaryWeaponLevel,
             SavedSecondaryWeaponUpgradeCount));
+    }
+
+    public HoverTip CreateCurrentHoverTip()
+    {
+        var primaryWeapon = GetPrimaryWeaponForDescription();
+        var secondaryWeapon = GetSecondaryWeaponForDescription();
+        var description = new LocString("relics", "GENSOUNOTABIBITO-WEAPON_BAG_RELIC.description");
+
+        description.Add(PrimaryWeaponNameKey, WeaponLocalization.GetTitle(primaryWeapon));
+        description.Add(PrimaryWeaponLevelTextKey, GetWeaponLevelText(primaryWeapon));
+        description.Add(SecondaryWeaponNameKey, WeaponLocalization.GetTitle(secondaryWeapon));
+        description.Add(SecondaryWeaponLevelTextKey, GetWeaponLevelText(secondaryWeapon));
+
+        return new HoverTip(Title, description);
     }
 
     public override async Task AfterObtained()

@@ -1,4 +1,3 @@
-using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Powers;
@@ -6,12 +5,13 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.Powers;
 
 namespace GensouNoTabibito.GensouNoTabibitoCode.Cards;
 
-public class BakedSweetPotato(): GensouNoTabibitoCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
+public class BakedSweetPotato() : GensouNoTabibitoCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
+    private Decimal _extraEnergy;
+
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new EnergyVar(1),
@@ -30,7 +30,6 @@ public class BakedSweetPotato(): GensouNoTabibitoCard(1, CardType.Skill, CardRar
     ];
 
     public override bool HasTurnEndInHandEffect => true;
-    private Decimal _extraEnergy;
 
     private Decimal ExtraEnergy
     {

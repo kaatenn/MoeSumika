@@ -5,6 +5,5 @@ namespace GensouNoTabibito.GensouNoTabibitoCode.Tags;
 
 public static class GensouNoTabibitoTags
 {
-    [CustomEnum("SWORD_SKILL")]
-    public static CardTag SwordSkill;
+    [CustomEnum("SWORD_SKILL")] public static CardTag SwordSkill;
 }

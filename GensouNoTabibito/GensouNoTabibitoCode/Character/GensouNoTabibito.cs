@@ -1,11 +1,11 @@
 using BaseLib.Abstracts;
 using BaseLib.Utils.NodeFactories;
-using Godot;
-using MegaCrit.Sts2.Core.Entities.Characters;
-using MegaCrit.Sts2.Core.Models;
 using GensouNoTabibito.GensouNoTabibitoCode.Cards;
 using GensouNoTabibito.GensouNoTabibitoCode.Extensions;
 using GensouNoTabibito.GensouNoTabibitoCode.Relics;
+using Godot;
+using MegaCrit.Sts2.Core.Entities.Characters;
+using MegaCrit.Sts2.Core.Models;
 
 namespace GensouNoTabibito.GensouNoTabibitoCode.Character;
 
@@ -35,7 +35,7 @@ public class GensouNoTabibito : PlaceholderCharacterModel
 
     public override IReadOnlyList<RelicModel> StartingRelics =>
     [
-        ModelDb.Relic<WeaponBagRelic>()
+        ModelDb.Relic<WeaponLibraryRelic>()
     ];
 
     public override CardPoolModel CardPool => ModelDb.CardPool<GensouNoTabibitoCardPool>();

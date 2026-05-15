@@ -1,4 +1,4 @@
-using GensouNoTabibito.GensouNoTabibitoCode.Relics;
+using GensouNoTabibito.GensouNoTabibitoCode.Weapons;
 
 namespace GensouNoTabibito.GensouNoTabibitoCode.Cards.Actions;
 
@@ -6,8 +6,8 @@ namespace GensouNoTabibito.GensouNoTabibitoCode.Cards.Actions;
 public sealed class UpgradePrimaryWeaponReward : WeaponRewardActionCard
 #pragma warning restore STS004
 {
-    public override void Resolve(WeaponBagRelic weaponBag)
+    public override void Resolve(IWeaponRewardOwner weaponRewardOwner)
     {
-        weaponBag.UpgradePrimaryWeaponFromReward();
+        weaponRewardOwner.UpgradePrimaryWeaponFromReward();
     }
 }

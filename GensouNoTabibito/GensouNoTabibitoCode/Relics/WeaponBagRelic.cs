@@ -24,13 +24,11 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace GensouNoTabibito.GensouNoTabibitoCode.Relics;
 
-public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
+public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier, IWeaponRewardOwner
 {
     private const int MaxCardRewardAlternatives = 2;
 
     private const string WeaponRewardAlternativeId = "GENSOUNOTABIBITO-WEAPON_REWARD";
-    private const string DraftWeaponAlternativeId = "GENSOUNOTABIBITO-DRAFT_WEAPON";
-    private const string UpgradeWeaponAlternativeId = "GENSOUNOTABIBITO-UPGRADE_WEAPON";
 
     private const string PrimaryWeaponNameKey = "PrimaryWeaponName";
     private const string PrimaryWeaponLevelTextKey = "PrimaryWeaponLevelText";
@@ -62,26 +60,27 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
     public override string PackedIconPath => "relic.png".RelicImagePath();
     protected override string PackedIconOutlinePath => "relic_outline.png".RelicImagePath();
     protected override string BigIconPath => "relic.png".BigRelicImagePath();
+    protected virtual string DescriptionKey => "GENSOUNOTABIBITO-WEAPON_BAG_RELIC.description";
 
-    [SavedProperty] public bool SavedHasWeapon { get; set; }
+    [SavedProperty] public bool GensouNoTabibito_SavedHasWeapon { get; set; }
 
-    [SavedProperty] public string SavedWeaponId { get; set; } = string.Empty;
+    [SavedProperty] public string GensouNoTabibito_SavedWeaponId { get; set; } = string.Empty;
 
-    [SavedProperty] public int SavedWeaponKind { get; set; }
+    [SavedProperty] public int GensouNoTabibito_SavedWeaponKind { get; set; }
 
-    [SavedProperty] public int SavedWeaponLevel { get; set; }
+    [SavedProperty] public int GensouNoTabibito_SavedWeaponLevel { get; set; }
 
-    [SavedProperty] public int SavedWeaponUpgradeCount { get; set; }
+    [SavedProperty] public int GensouNoTabibito_SavedWeaponUpgradeCount { get; set; }
 
-    [SavedProperty] public bool SavedHasSecondaryWeapon { get; set; }
+    [SavedProperty] public bool GensouNoTabibito_SavedHasSecondaryWeapon { get; set; }
 
-    [SavedProperty] public string SavedSecondaryWeaponId { get; set; } = string.Empty;
+    [SavedProperty] public string GensouNoTabibito_SavedSecondaryWeaponId { get; set; } = string.Empty;
 
-    [SavedProperty] public int SavedSecondaryWeaponKind { get; set; }
+    [SavedProperty] public int GensouNoTabibito_SavedSecondaryWeaponKind { get; set; }
 
-    [SavedProperty] public int SavedSecondaryWeaponLevel { get; set; }
+    [SavedProperty] public int GensouNoTabibito_SavedSecondaryWeaponLevel { get; set; }
 
-    [SavedProperty] public int SavedSecondaryWeaponUpgradeCount { get; set; }
+    [SavedProperty] public int GensouNoTabibito_SavedSecondaryWeaponUpgradeCount { get; set; }
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
@@ -102,26 +101,102 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
         }
     }
 
+    public void DraftWeaponFromReward(WeaponState weapon)
+    {
+        var slot = GetWeaponSlot();
+        slot.EquipWeapon(weapon);
+
+        SyncSavedWeaponFromPlayerSlot(Owner);
+        InvokeDisplayAmountChanged();
+    }
+
+    public void DraftPrimaryWeaponFromReward(WeaponState weapon)
+    {
+        var slot = GetWeaponSlot();
+        slot.ReplaceWeapon(weapon);
+
+        SyncSavedWeaponFromPlayerSlot(Owner);
+        InvokeDisplayAmountChanged();
+    }
+
+    public void DraftSecondaryWeaponFromReward(WeaponState weapon)
+    {
+        var slot = GetWeaponSlot();
+        if (!slot.CanHoldSecondaryWeapon)
+            return;
+
+        slot.ReplaceSecondaryWeapon(weapon);
+
+        SyncSavedWeaponFromPlayerSlot(Owner);
+        InvokeDisplayAmountChanged();
+    }
+
+    public void UpgradeWeaponFromReward()
+    {
+        var slot = GetWeaponSlot();
+        slot.EnsureWeaponEquipped(WeaponState.CreateBrokenSword());
+        if (!slot.UpgradeCurrentWeapon())
+            return;
+
+        SyncSavedWeaponFromPlayerSlot(Owner);
+        InvokeDisplayAmountChanged();
+    }
+
+    public void UpgradePrimaryWeaponFromReward()
+    {
+        UpgradeWeaponFromReward();
+    }
+
+    public void UpgradeSecondaryWeaponFromReward()
+    {
+        var slot = GetWeaponSlot();
+        if (!slot.UpgradeSecondaryWeapon())
+            return;
+
+        SyncSavedWeaponFromPlayerSlot(Owner);
+        InvokeDisplayAmountChanged();
+    }
+
+    public void DiscardPrimaryWeaponFromReward()
+    {
+        var slot = GetWeaponSlot();
+        if (!slot.DiscardPrimaryWeapon())
+            return;
+
+        SyncSavedWeaponFromPlayerSlot(Owner);
+        InvokeDisplayAmountChanged();
+    }
+
+    public void DiscardSecondaryWeaponFromReward()
+    {
+        var slot = GetWeaponSlot();
+        if (!slot.DiscardSecondaryWeapon())
+            return;
+
+        SyncSavedWeaponFromPlayerSlot(Owner);
+        InvokeDisplayAmountChanged();
+    }
+
     public void SyncSavedWeaponFromPlayerSlot(Player player)
     {
         var slot = player.GetWeaponSlot();
         var weapon = slot.PrimaryWeapon;
         if (weapon == null)
         {
-            SavedHasWeapon = false;
-            SavedWeaponId = string.Empty;
-            SavedWeaponKind = 0;
-            SavedWeaponLevel = 0;
-            SavedWeaponUpgradeCount = 0;
+            GensouNoTabibito_SavedHasWeapon = false;
+            GensouNoTabibito_SavedWeaponId = string.Empty;
+            GensouNoTabibito_SavedWeaponKind = 0;
+            GensouNoTabibito_SavedWeaponLevel = 0;
+            GensouNoTabibito_SavedWeaponUpgradeCount = 0;
             ClearSavedSecondaryWeapon();
             return;
         }
 
-        SavedHasWeapon = true;
-        SavedWeaponId = weapon.Id;
-        SavedWeaponKind = (int)weapon.Kind;
-        SavedWeaponLevel = weapon.Level;
-        SavedWeaponUpgradeCount = weapon.UpgradeCount;
+        GensouNoTabibito_SavedHasWeapon = true;
+        GensouNoTabibito_SavedWeaponId = weapon.Id;
+        GensouNoTabibito_SavedWeaponKind = (int)weapon.Kind;
+        GensouNoTabibito_SavedWeaponLevel = weapon.Level;
+        GensouNoTabibito_SavedWeaponUpgradeCount = weapon.UpgradeCount;
 
         var secondaryWeapon = slot.SecondaryWeapon;
         if (secondaryWeapon == null)
@@ -130,45 +205,45 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
             return;
         }
 
-        SavedHasSecondaryWeapon = true;
-        SavedSecondaryWeaponId = secondaryWeapon.Id;
-        SavedSecondaryWeaponKind = (int)secondaryWeapon.Kind;
-        SavedSecondaryWeaponLevel = secondaryWeapon.Level;
-        SavedSecondaryWeaponUpgradeCount = secondaryWeapon.UpgradeCount;
+        GensouNoTabibito_SavedHasSecondaryWeapon = true;
+        GensouNoTabibito_SavedSecondaryWeaponId = secondaryWeapon.Id;
+        GensouNoTabibito_SavedSecondaryWeaponKind = (int)secondaryWeapon.Kind;
+        GensouNoTabibito_SavedSecondaryWeaponLevel = secondaryWeapon.Level;
+        GensouNoTabibito_SavedSecondaryWeaponUpgradeCount = secondaryWeapon.UpgradeCount;
     }
 
     public void RestorePlayerSlotFromSavedWeapon(Player player)
     {
         var slot = player.GetWeaponSlot();
-        if (!SavedHasWeapon)
+        if (!GensouNoTabibito_SavedHasWeapon)
         {
             slot.EnsureWeaponEquipped(WeaponState.CreateBrokenSword());
             return;
         }
 
         var primaryWeapon = WeaponState.Create(
-            SavedWeaponId,
-            (WeaponKind)SavedWeaponKind,
-            SavedWeaponLevel,
-            SavedWeaponUpgradeCount);
+            GensouNoTabibito_SavedWeaponId,
+            (WeaponKind)GensouNoTabibito_SavedWeaponKind,
+            GensouNoTabibito_SavedWeaponLevel,
+            GensouNoTabibito_SavedWeaponUpgradeCount);
 
         slot.ReplaceWeapon(primaryWeapon);
 
-        if (!SavedHasSecondaryWeapon)
+        if (!GensouNoTabibito_SavedHasSecondaryWeapon)
             return;
 
         slot.ReplaceSecondaryWeapon(WeaponState.Create(
-            SavedSecondaryWeaponId,
-            (WeaponKind)SavedSecondaryWeaponKind,
-            SavedSecondaryWeaponLevel,
-            SavedSecondaryWeaponUpgradeCount));
+            GensouNoTabibito_SavedSecondaryWeaponId,
+            (WeaponKind)GensouNoTabibito_SavedSecondaryWeaponKind,
+            GensouNoTabibito_SavedSecondaryWeaponLevel,
+            GensouNoTabibito_SavedSecondaryWeaponUpgradeCount));
     }
 
     public HoverTip CreateCurrentHoverTip()
     {
         var primaryWeapon = GetPrimaryWeaponForDescription();
         var secondaryWeapon = GetSecondaryWeaponForDescription();
-        var description = new LocString("relics", "GENSOUNOTABIBITO-WEAPON_BAG_RELIC.description");
+        var description = new LocString("relics", DescriptionKey);
 
         description.Add(PrimaryWeaponNameKey, WeaponLocalization.GetTitle(primaryWeapon));
         description.Add(PrimaryWeaponLevelTextKey, GetWeaponLevelText(primaryWeapon));
@@ -257,82 +332,6 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
         return true;
     }
 
-    public void DraftWeaponFromReward(WeaponState weapon)
-    {
-        var slot = GetWeaponSlot();
-        slot.EquipWeapon(weapon);
-
-        SyncSavedWeaponFromPlayerSlot(Owner);
-        InvokeDisplayAmountChanged();
-    }
-
-    public void DraftPrimaryWeaponFromReward(WeaponState weapon)
-    {
-        var slot = GetWeaponSlot();
-        slot.ReplaceWeapon(weapon);
-
-        SyncSavedWeaponFromPlayerSlot(Owner);
-        InvokeDisplayAmountChanged();
-    }
-
-    public void DraftSecondaryWeaponFromReward(WeaponState weapon)
-    {
-        var slot = GetWeaponSlot();
-        if (!slot.CanHoldSecondaryWeapon)
-            return;
-
-        slot.ReplaceSecondaryWeapon(weapon);
-
-        SyncSavedWeaponFromPlayerSlot(Owner);
-        InvokeDisplayAmountChanged();
-    }
-
-    public void UpgradeWeaponFromReward()
-    {
-        var slot = GetWeaponSlot();
-        slot.EnsureWeaponEquipped(WeaponState.CreateBrokenSword());
-        if (!slot.UpgradeCurrentWeapon())
-            return;
-
-        SyncSavedWeaponFromPlayerSlot(Owner);
-        InvokeDisplayAmountChanged();
-    }
-
-    public void UpgradePrimaryWeaponFromReward()
-    {
-        UpgradeWeaponFromReward();
-    }
-
-    public void UpgradeSecondaryWeaponFromReward()
-    {
-        var slot = GetWeaponSlot();
-        if (!slot.UpgradeSecondaryWeapon())
-            return;
-
-        SyncSavedWeaponFromPlayerSlot(Owner);
-        InvokeDisplayAmountChanged();
-    }
-
-    public void DiscardPrimaryWeaponFromReward()
-    {
-        var slot = GetWeaponSlot();
-        if (!slot.DiscardPrimaryWeapon())
-            return;
-
-        SyncSavedWeaponFromPlayerSlot(Owner);
-        InvokeDisplayAmountChanged();
-    }
-
-    public void DiscardSecondaryWeaponFromReward()
-    {
-        var slot = GetWeaponSlot();
-        if (!slot.DiscardSecondaryWeapon())
-            return;
-
-        SyncSavedWeaponFromPlayerSlot(Owner);
-        InvokeDisplayAmountChanged();
-    }
-
     public override bool ShouldAddToDeck(CardModel card)
     {
         return card is not WeaponRewardActionCard || !ReferenceEquals(card.Owner, Owner);
@@ -368,7 +367,7 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
         return (List<CardCreationResult>)CardRewardCardsField.GetValue(cardReward)!;
     }
 
-    private IEnumerable<CardModel> CreateWeaponRewardCards()
+    public IEnumerable<CardModel> CreateWeaponRewardCards()
     {
         var slot = GetWeaponSlot();
         if (!slot.CanHoldSecondaryWeapon)
@@ -432,12 +431,12 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
         if (slot?.PrimaryWeapon != null)
             return slot.PrimaryWeapon;
 
-        return SavedHasWeapon
+        return GensouNoTabibito_SavedHasWeapon
             ? WeaponState.Create(
-                SavedWeaponId,
-                (WeaponKind)SavedWeaponKind,
-                SavedWeaponLevel,
-                SavedWeaponUpgradeCount)
+                GensouNoTabibito_SavedWeaponId,
+                (WeaponKind)GensouNoTabibito_SavedWeaponKind,
+                GensouNoTabibito_SavedWeaponLevel,
+                GensouNoTabibito_SavedWeaponUpgradeCount)
             : WeaponState.CreateBrokenSword();
     }
 
@@ -447,12 +446,12 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
         if (slot?.SecondaryWeapon != null)
             return slot.SecondaryWeapon;
 
-        return SavedHasSecondaryWeapon
+        return GensouNoTabibito_SavedHasSecondaryWeapon
             ? WeaponState.Create(
-                SavedSecondaryWeaponId,
-                (WeaponKind)SavedSecondaryWeaponKind,
-                SavedSecondaryWeaponLevel,
-                SavedSecondaryWeaponUpgradeCount)
+                GensouNoTabibito_SavedSecondaryWeaponId,
+                (WeaponKind)GensouNoTabibito_SavedSecondaryWeaponKind,
+                GensouNoTabibito_SavedSecondaryWeaponLevel,
+                GensouNoTabibito_SavedSecondaryWeaponUpgradeCount)
             : null;
     }
 
@@ -484,10 +483,10 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier
 
     private void ClearSavedSecondaryWeapon()
     {
-        SavedHasSecondaryWeapon = false;
-        SavedSecondaryWeaponId = string.Empty;
-        SavedSecondaryWeaponKind = 0;
-        SavedSecondaryWeaponLevel = 0;
-        SavedSecondaryWeaponUpgradeCount = 0;
+        GensouNoTabibito_SavedHasSecondaryWeapon = false;
+        GensouNoTabibito_SavedSecondaryWeaponId = string.Empty;
+        GensouNoTabibito_SavedSecondaryWeaponKind = 0;
+        GensouNoTabibito_SavedSecondaryWeaponLevel = 0;
+        GensouNoTabibito_SavedSecondaryWeaponUpgradeCount = 0;
     }
 }

@@ -48,6 +48,7 @@ Notes from this environment:
 - Keep gameplay wiring close to the owning model: relics receive game hooks, then delegate to weapon behavior services.
 - Keep startup registration out of `MainFile.Initialize()` where possible. `MainFile` should patch Harmony and then call the top-level `Registry.Register()` method; add future manual registrations under `GensouNoTabibitoCode/Registry.cs`.
 - Do not rewrite generated `.uid`, `.import`, `.godot`, or asset metadata files unless the task explicitly requires it.
+- Godot `res://` resource paths must use `/`, not `Path.Join` on Windows. Use the existing resource path helpers in `GensouNoTabibitoCode/Extensions/StringExtensions.cs`, which normalize separators for Godot.
 - The working tree may contain user edits. Do not revert unrelated changes.
 
 ## Cards, Powers, And Reward UI
@@ -112,27 +113,36 @@ Current `WeaponBagRelic.TryModifyCardRewardAlternatives` uses one top-level weap
 - `ShouldAddToDeck` only blocks weapon action cards from entering the deck. Resolve their effect in `AfterAddToDeckPrevented`, because returning `false` from `ShouldAddToDeck` prevents `TryModifyCardBeingAddedToDeck` from running.
 - `InvokeDisplayAmountChanged()` only updates relic display amount UI. It does not rebuild the main relic description hover tip. `WeaponBagRelicHoverTipPatch` patches `RelicModel.get_HoverTip` for `WeaponBagRelic` only and rebuilds the main hover tip description with current weapon names and levels.
 
+`WeaponLibraryRelic` is the upgraded weapon-slot relic:
+
+- `TouchOfOrobasWeaponLibraryPatch` maps `WeaponBagRelic` to `WeaponLibraryRelic` when Touch of Orobas upgrades the starter relic. Without this patch, the vanilla private upgrade map would fall back to Circlet.
+- `WeaponLibraryRelic` inherits the weapon-slot state, combat hooks, reward-action creation, and dynamic hover-tip support from `WeaponBagRelic`.
+- Override `DescriptionKey` on derived weapon-slot relics. `WeaponBagRelic.CreateCurrentHoverTip()` uses that key to rebuild the dynamic relic hover tip; without an override, derived relics will show the weapon bag description.
+- `WeaponLibraryRelic.TryModifyCardRewardAlternatives` returns `false`; the upgraded relic does not replace card rewards.
+- `WeaponLibraryRelic.TryModifyRewards` adds a standalone `WeaponLibraryReward` to the rewards list.
+- `WeaponLibraryReward` is a `CustomReward` with a generated custom `RewardType`. It presents the same `WeaponRewardActionCard` choices as the card-reward replacement flow.
+- `WeaponLibraryReward.OnSelect` should open the reward card screen with `NCardRewardSelectionScreen.ShowScreen`, then await `screen.OptionSelected()`. Do not reflect `_completionSource`; it is initialized by `OptionSelected()`.
+- After `OptionSelected()` returns, remove the screen from `NOverlayStack.Instance`; otherwise the overlay remains clickable and later clicks can try to complete the same task twice.
+- Weapon reward action cards resolve through `IWeaponRewardOwner`, not directly against `WeaponBagRelic`, so both `WeaponBagRelic` and `WeaponLibraryRelic` can reuse them.
+
 Current concrete weapons:
 
 - Broken Sword: `GENSOUNOTABIBITO-BROKEN_SWORD`, sword weapon, max level 2.
 - Light Sword: `GENSOUNOTABIBITO-LIGHT_SWORD`, sword weapon, max level 5. At combat start it grants 1/1/2/2/3 Dexterity by level, and all Sword Skill tagged cards deal +2 damage while any equipped weapon is Light Sword.
 - Dual wield restriction: when both primary and secondary weapons are equipped, `WeaponBehaviorHookBridge` does not dispatch normal weapon behavior hooks or additive damage modifiers. `BeforeCombatStart` only applies 10 stacks of `SwordSkill`; all other weapon special effects are disabled.
 
-## Temporary Custom Reward Note
-
-Remove this section from `AGENT.md` once the knowledge is used to implement the future upgraded WeaponBag-style relic.
+## Custom Reward Notes
 
 `CardRewardAlternative.Generate` supports at most two total alternatives, including vanilla `Skip` and `REROLL`. Do not use multiple card reward alternatives for weapon actions such as "draft weapon" plus "upgrade weapon"; they can exceed the hard UI limit.
-
-For the future upgraded WeaponBag-style relic, the intended behavior is "can upgrade weapons" rather than "replace a card reward with upgrade weapon". Investigate and likely use BaseLib's `CustomReward` for a standalone weapon reward instead of replacing card reward alternatives. This should allow weapon rewards to appear as their own reward entry and avoid the two-alternative limit.
 
 Confirmed `CustomReward` details:
 
 - Define a custom reward type with a static `[CustomEnum] public static RewardType ...;` field on the `CustomReward` subclass.
-- The `CustomReward` subclass must have a public parameterless constructor because BaseLib creates an instance during `ModelDb.Init` enum generation.
+- The `CustomReward` base constructor in the current BaseLib version takes `Player`; implement the actual constructor shape required by compile errors for the installed BaseLib version.
+- Implement `DeserializeMethod` with a static factory returning `CustomReward`.
 - `ToSerializable()` must return a `SerializableReward` whose `RewardType` is the generated custom reward type, not `None` or a base-game `RewardType`.
 - BaseLib automatically calls `Initialize()` for valid `CustomReward` classes during enum generation; do not manually register it unless the automatic path is intentionally bypassed.
-- Add future standalone weapon rewards from an owning relic with `TryModifyRewards(Player player, List<Reward> rewards, AbstractRoom? room)`, not with `TryModifyCardRewardAlternatives`.
+- Add standalone weapon rewards from an owning relic with `TryModifyRewards(Player player, List<Reward> rewards, AbstractRoom? room)`, not with `TryModifyCardRewardAlternatives`.
 - `RewardsSet.GenerateWithoutOffering()` populates existing rewards, calls `Hook.ModifyRewards`, then populates newly added rewards before sorting by `RewardsSetIndex`.
 
 Reference investigation targets:
@@ -274,6 +284,9 @@ Important files:
 - `GensouNoTabibitoCode/Keywords/GensouNoTabibitoKeywords.cs`
 - `GensouNoTabibitoCode/Localization/StringDynamicVar.cs`
 - `GensouNoTabibitoCode/Relics/WeaponBagRelic.cs`
+- `GensouNoTabibitoCode/Relics/WeaponLibraryRelic.cs`
+- `GensouNoTabibitoCode/Rewards/WeaponLibraryReward.cs`
+- `GensouNoTabibitoCode/Weapons/IWeaponRewardOwner.cs`
 
 `WeaponBagRelic` is the current starter weapon-slot carrier:
 
@@ -282,6 +295,7 @@ Important files:
 - Gets the owner's `WeaponSlotState`.
 - Delegates to `WeaponBehaviorHookBridge`.
 - Carries saved weapon-slot state through `[SavedProperty]`.
+- Prefix saved-property names with `GensouNoTabibito_` to avoid BaseLib compatibility warnings and future mod collisions. Renaming saved properties changes save keys; add explicit migration if old run-save compatibility matters.
 - Uses dynamic relic description variables for weapon names and levels only.
 - Aggregates weapon-specific hover tips from `WeaponBehaviorHookBridge`; long weapon descriptions and weapon effect details belong to behaviors, not the relic description body.
 - Only exposes the upgrade reward when `WeaponSlotState.CanUpgradeCurrentWeapon` is true.

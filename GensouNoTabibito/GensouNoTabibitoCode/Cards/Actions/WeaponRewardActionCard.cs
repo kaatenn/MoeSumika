@@ -2,7 +2,7 @@ using BaseLib.Abstracts;
 using BaseLib.Utils;
 using GensouNoTabibito.GensouNoTabibitoCode.Character;
 using GensouNoTabibito.GensouNoTabibitoCode.Extensions;
-using GensouNoTabibito.GensouNoTabibitoCode.Relics;
+using GensouNoTabibito.GensouNoTabibitoCode.Weapons;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
@@ -26,7 +26,7 @@ public abstract class WeaponRewardActionCard() : CustomCardModel(
     public override string PortraitPath => "relic.png".RelicImagePath();
     public override string BetaPortraitPath => "relic.png".RelicImagePath();
 
-    public abstract void Resolve(WeaponBagRelic weaponBag);
+    public abstract void Resolve(IWeaponRewardOwner weaponRewardOwner);
 
     protected override Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

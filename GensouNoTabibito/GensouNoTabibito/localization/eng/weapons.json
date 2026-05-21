@@ -1,0 +1,13 @@
+{
+  "GENSOUNOTABIBITO-WEAPON.current": "Current: {0}",
+  "GENSOUNOTABIBITO-WEAPON.maxLevel": "Max level reached.",
+  "GENSOUNOTABIBITO-WEAPON.next": "Upgrade: {0}",
+  "GENSOUNOTABIBITO-WEAPON.primaryTitle": "Main Hand: {0}",
+  "GENSOUNOTABIBITO-WEAPON.progress": "Progress: {0}",
+  "GENSOUNOTABIBITO-WEAPON.secondaryTitle": "Off Hand: {0}",
+  "GENSOUNOTABIBITO-BROKEN_SWORD.description": "[gold]Sword Weapon[/gold]. At the start of combat, gain [gold]{DramaticEntranceName}[/gold].",
+  "GENSOUNOTABIBITO-BROKEN_SWORD.name": "Broken Sword",
+  "GENSOUNOTABIBITO-LIGHT_SWORD.description": "[gold]Sword Weapon[/gold]. At the start of combat, gain [blue]{Dexterity}[/blue] [gold]Dexterity[/gold]. Sword Skill cards deal [blue]{SwordSkillDamageBonus}[/blue] additional damage.",
+  "GENSOUNOTABIBITO-LIGHT_SWORD.name": "Light Sword",
+  "GENSOUNOTABIBITO-NONE.name": "None"
+}

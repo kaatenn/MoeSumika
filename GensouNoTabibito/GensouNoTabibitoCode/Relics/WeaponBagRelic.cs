@@ -84,10 +84,10 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier, IWe
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new StringDynamicVar(PrimaryWeaponNameKey, () => WeaponLocalization.GetTitle(GetPrimaryWeaponForDescription())),
+        new StringDynamicVar(PrimaryWeaponNameKey, () => GetWeaponName(GetPrimaryWeaponForDescription())),
         new StringDynamicVar(PrimaryWeaponLevelTextKey, () => GetWeaponLevelText(GetPrimaryWeaponForDescription())),
         new StringDynamicVar(SecondaryWeaponNameKey,
-            () => WeaponLocalization.GetTitle(GetSecondaryWeaponForDescription())),
+            () => GetWeaponName(GetSecondaryWeaponForDescription())),
         new StringDynamicVar(SecondaryWeaponLevelTextKey, () => GetWeaponLevelText(GetSecondaryWeaponForDescription()))
     ];
 
@@ -95,8 +95,8 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier, IWe
     {
         get
         {
-            foreach (var weapon in GetWeaponsForDescription())
-            foreach (var tip in WeaponBehaviorHookBridge.GetHoverTips(weapon))
+            foreach (var equippedWeapon in GetEquippedWeaponsForDescription())
+            foreach (var tip in WeaponBehaviorHookBridge.GetHoverTips(equippedWeapon))
                 yield return tip;
         }
     }
@@ -245,9 +245,9 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier, IWe
         var secondaryWeapon = GetSecondaryWeaponForDescription();
         var description = new LocString("relics", DescriptionKey);
 
-        description.Add(PrimaryWeaponNameKey, WeaponLocalization.GetTitle(primaryWeapon));
+        description.Add(PrimaryWeaponNameKey, GetWeaponName(primaryWeapon));
         description.Add(PrimaryWeaponLevelTextKey, GetWeaponLevelText(primaryWeapon));
-        description.Add(SecondaryWeaponNameKey, WeaponLocalization.GetTitle(secondaryWeapon));
+        description.Add(SecondaryWeaponNameKey, GetWeaponName(secondaryWeapon));
         description.Add(SecondaryWeaponLevelTextKey, GetWeaponLevelText(secondaryWeapon));
 
         return new HoverTip(Title, description);
@@ -474,11 +474,27 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier, IWe
             yield return secondaryWeapon;
     }
 
+    private IEnumerable<EquippedWeapon> GetEquippedWeaponsForDescription()
+    {
+        var primaryWeapon = GetPrimaryWeaponForDescription();
+        if (primaryWeapon != null)
+            yield return new EquippedWeapon(WeaponSlot.Primary, primaryWeapon);
+
+        var secondaryWeapon = GetSecondaryWeaponForDescription();
+        if (secondaryWeapon != null)
+            yield return new EquippedWeapon(WeaponSlot.Secondary, secondaryWeapon);
+    }
+
     private static string GetWeaponLevelText(WeaponState? weapon)
     {
         return weapon == null
             ? string.Empty
             : $" Lv. {weapon.Level}";
+    }
+
+    private static string GetWeaponName(WeaponState? weapon)
+    {
+        return new LocString("weapons", $"{weapon?.Id ?? "GENSOUNOTABIBITO-NONE"}.name").GetFormattedText();
     }
 
     private void ClearSavedSecondaryWeapon()

@@ -2,6 +2,7 @@ using GensouNoTabibito.GensouNoTabibitoCode.Localization;
 using GensouNoTabibito.GensouNoTabibitoCode.Weapons;
 using GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
 namespace GensouNoTabibito.GensouNoTabibitoCode.Cards.Actions;
@@ -14,7 +15,7 @@ public abstract class DraftWeaponRewardCard : WeaponRewardActionCard
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new StringDynamicVar(DraftedWeaponNameKey, () => WeaponLocalization.GetTitle(DraftedWeapon))
+        new StringDynamicVar(DraftedWeaponNameKey, () => GetWeaponName(DraftedWeapon))
     ];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
@@ -31,5 +32,10 @@ public abstract class DraftWeaponRewardCard : WeaponRewardActionCard
     protected WeaponState GetDraftedWeapon()
     {
         return DraftedWeapon ?? throw new InvalidOperationException("Draft weapon reward card has no weapon.");
+    }
+
+    private static string GetWeaponName(WeaponState? weapon)
+    {
+        return new LocString("weapons", $"{weapon?.Id ?? "GENSOUNOTABIBITO-NONE"}.name").GetFormattedText();
     }
 }

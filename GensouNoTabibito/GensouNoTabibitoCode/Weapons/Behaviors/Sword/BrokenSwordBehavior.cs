@@ -14,6 +14,11 @@ public sealed class BrokenSwordBehavior : SwordBehavior
 {
     public override int MaxLevel => 2;
 
+    protected override IEnumerable<WeaponDynamicVar> CanonicalVars =>
+    [
+        WeaponDynamicVar.FromCard<DramaticEntrance>("DramaticEntranceName", level => level >= 2)
+    ];
+
     public override async Task AfterSideTurnStart(
         WeaponState weapon,
         Player player,
@@ -50,6 +55,9 @@ public sealed class BrokenSwordBehavior : SwordBehavior
         foreach (var tip in base.GetHoverTips(weapon))
             yield return tip;
 
-        yield return HoverTipFactory.FromCard<DramaticEntrance>(weapon.Level >= 2);
+        foreach (var hoverTip in HoverTipFactory.FromCardWithCardHoverTips<DramaticEntrance>(weapon.Level >= 2))
+        {
+            yield return hoverTip;
+        }
     }
 }

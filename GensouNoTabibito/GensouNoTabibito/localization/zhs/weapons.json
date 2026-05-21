@@ -1,0 +1,13 @@
+{
+  "GENSOUNOTABIBITO-WEAPON.current": "当前：{0}",
+  "GENSOUNOTABIBITO-WEAPON.maxLevel": "已达到最高等级。",
+  "GENSOUNOTABIBITO-WEAPON.next": "升级后：{0}",
+  "GENSOUNOTABIBITO-WEAPON.primaryTitle": "主手：{0}",
+  "GENSOUNOTABIBITO-WEAPON.progress": "等级进度：{0}",
+  "GENSOUNOTABIBITO-WEAPON.secondaryTitle": "副手：{0}",
+  "GENSOUNOTABIBITO-BROKEN_SWORD.description": "[gold]剑类武器[/gold]。战斗开始时，获得[gold]{DramaticEntranceName}[/gold]。",
+  "GENSOUNOTABIBITO-BROKEN_SWORD.name": "破刀",
+  "GENSOUNOTABIBITO-LIGHT_SWORD.description": "[gold]剑类武器[/gold]。战斗开始时，获得[blue]{Dexterity}[/blue]点[gold]敏捷[/gold]。所有剑技牌造成的伤害增加[blue]{SwordSkillDamageBonus}[/blue]点。",
+  "GENSOUNOTABIBITO-LIGHT_SWORD.name": "轻剑",
+  "GENSOUNOTABIBITO-NONE.name": "无"
+}

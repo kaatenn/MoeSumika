@@ -3,8 +3,10 @@ using BaseLib.Patches.Content;
 using GensouNoTabibito.GensouNoTabibitoCode.Cards.Actions;
 using GensouNoTabibito.GensouNoTabibitoCode.Extensions;
 using GensouNoTabibito.GensouNoTabibitoCode.Relics;
+using MegaCrit.Sts2.Core.Entities.CardRewardAlternatives;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
+using MegaCrit.Sts2.Core.Entities.Rewards;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Nodes.Screens.CardSelection;
 using MegaCrit.Sts2.Core.Nodes.Screens.Overlays;
@@ -54,12 +56,28 @@ public sealed class WeaponLibraryReward : CustomReward
         if (_cards.Count == 0)
             return false;
 
-        var screen = NCardRewardSelectionScreen.ShowScreen(_cards, []);
+        var skipped = false;
+        var alternatives = new[]
+        {
+            new CardRewardAlternative(
+                "SKIP",
+                () =>
+                {
+                    skipped = true;
+                    return Task.CompletedTask;
+                },
+                PostAlternateCardRewardAction.EndSelectionAndDoNotCompleteReward)
+        };
+
+        var screen = NCardRewardSelectionScreen.ShowScreen(_cards, alternatives);
         if (screen == null)
             return false;
 
         var selectedIndex = await screen.OptionSelected();
         NOverlayStack.Instance?.Remove(screen);
+
+        if (skipped)
+            return true;
 
         if (selectedIndex == null || selectedIndex < 0 || selectedIndex >= _cards.Count)
             return false;

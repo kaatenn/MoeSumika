@@ -3,7 +3,7 @@
   "GENSOUNOTABIBITO-BOW_WEAPON.title": "弓类武器",
   "GENSOUNOTABIBITO-STAFF_WEAPON.description": "用于元素效果的武器类型。",
   "GENSOUNOTABIBITO-STAFF_WEAPON.title": "法杖类武器",
-  "GENSOUNOTABIBITO-SWORD_WEAPON.description": "可以持有副武器的武器类型。战斗开始时，剑类武器给予5层[gold]剑技等级[/gold]。持有双刀时，武器特殊效果失效",
+  "GENSOUNOTABIBITO-SWORD_WEAPON.description": "可以持有副武器的武器类型。战斗开始时，剑类武器给予5层[gold]剑技等级[/gold]。持有双刀时，武器特殊效果失效。",
   "GENSOUNOTABIBITO-SWORD_WEAPON.title": "剑类武器",
   "GENSOUNOTABIBITO-SWORD_SKILL_REQUIREMENT.description": "效果需要至少拥有剑技等级需求的剑技等级层数才能触发",
   "GENSOUNOTABIBITO-SWORD_SKILL_REQUIREMENT.title": "剑技等级需求"

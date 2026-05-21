@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Rooms;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -118,6 +119,23 @@ public static class WeaponBehaviorHookBridge
         return Get(weapon).GetHoverTips(weapon);
     }
 
+    public static IEnumerable<IHoverTip> GetHoverTips(EquippedWeapon equippedWeapon)
+    {
+        var isWeaponTip = true;
+        foreach (var tip in Get(equippedWeapon.Weapon).GetHoverTips(equippedWeapon.Weapon))
+        {
+            if (isWeaponTip && tip is HoverTip hoverTip)
+            {
+                yield return CreateEquippedWeaponHoverTip(equippedWeapon, hoverTip);
+                isWeaponTip = false;
+                continue;
+            }
+
+            yield return tip;
+            isWeaponTip = false;
+        }
+    }
+
     public static bool CanUpgrade(WeaponState weapon)
     {
         return weapon.Level < Get(weapon).MaxLevel;
@@ -142,6 +160,41 @@ public static class WeaponBehaviorHookBridge
     private static bool IsDualWielding(WeaponSlotState slot)
     {
         return slot.PrimaryWeapon != null && slot.SecondaryWeapon != null;
+    }
+
+    private static HoverTip CreateEquippedWeaponHoverTip(EquippedWeapon equippedWeapon, HoverTip source)
+    {
+        var title = new LocString("weapons", GetEquippedWeaponTitleKey(equippedWeapon.Slot));
+        title.Add("0", GetWeaponName(equippedWeapon.Weapon));
+
+        var tip = new HoverTip(title, source.Description, source.Icon)
+        {
+            Id = $"{source.Id}.{equippedWeapon.Slot}",
+            IsSmart = source.IsSmart,
+            IsDebuff = source.IsDebuff,
+            IsInstanced = source.IsInstanced,
+            ShouldOverrideTextOverflow = source.ShouldOverrideTextOverflow
+        };
+
+        if (source.CanonicalModel != null)
+            tip.SetCanonicalModel(source.CanonicalModel);
+
+        return tip;
+    }
+
+    private static string GetEquippedWeaponTitleKey(WeaponSlot slot)
+    {
+        return slot switch
+        {
+            WeaponSlot.Primary => "GENSOUNOTABIBITO-WEAPON.primaryTitle",
+            WeaponSlot.Secondary => "GENSOUNOTABIBITO-WEAPON.secondaryTitle",
+            _ => throw new ArgumentOutOfRangeException(nameof(slot), slot, null)
+        };
+    }
+
+    private static string GetWeaponName(WeaponState weapon)
+    {
+        return new LocString("weapons", $"{weapon.Id}.name").GetFormattedText();
     }
 
     private static Task ApplyDualWieldSwordSkill(Player player)

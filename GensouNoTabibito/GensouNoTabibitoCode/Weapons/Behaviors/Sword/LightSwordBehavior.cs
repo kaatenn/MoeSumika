@@ -17,6 +17,12 @@ public sealed class LightSwordBehavior : SwordBehavior
 
     public override int MaxLevel => 5;
 
+    protected override IEnumerable<WeaponDynamicVar> CanonicalVars =>
+    [
+        WeaponDynamicVar.FromLevels("Dexterity", DexterityByLevel),
+        new("SwordSkillDamageBonus", SwordSkillDamageBonus)
+    ];
+
     public override async Task BeforeCombatStart(WeaponState weapon, Player player)
     {
         await base.BeforeCombatStart(weapon, player);
@@ -36,6 +42,8 @@ public sealed class LightSwordBehavior : SwordBehavior
 
         yield return HoverTipFactory.FromPower<DexterityPower>();
     }
+
+    protected override string GetProgressDescription(WeaponState weapon) => string.Join(" / ", DexterityByLevel);
 
     public override decimal ModifyDamageAdditive(
         WeaponState weapon,

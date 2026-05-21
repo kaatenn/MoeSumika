@@ -4,5 +4,5 @@ namespace GensouNoTabibito.GensouNoTabibitoCode.Character;
 
 public static class GensouNoTabibitoCardColors
 {
-    public static Color CardBackPink => new("f08bb8");
+    public static Color CardBackPink => new("ED79C1");
 }

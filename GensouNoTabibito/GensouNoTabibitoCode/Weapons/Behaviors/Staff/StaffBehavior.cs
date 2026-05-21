@@ -1,13 +1,16 @@
+using GensouNoTabibito.GensouNoTabibitoCode.Keywords;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
-using GensouNoTabibito.GensouNoTabibitoCode.Keywords;
 
 namespace GensouNoTabibito.GensouNoTabibitoCode.Weapons.Behaviors.Staff;
 
 public sealed class StaffBehavior : WeaponBehavior
 {
+    public override int MaxLevel => 2;
+    private int MagicLevel { get; set; }
+
     public override Task AfterCardPlayed(
         WeaponState weapon,
         Player player,

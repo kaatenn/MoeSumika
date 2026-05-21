@@ -301,11 +301,13 @@ Important files:
 - Only exposes the upgrade reward when `WeaponSlotState.CanUpgradeCurrentWeapon` is true.
 - Calls `InvokeDisplayAmountChanged()` after a successful weapon upgrade so the relic description re-renders dynamic weapon level text.
 
-Weapon localization currently lives in the `relics` localization table, not a custom `weapons` table. The game does not automatically create arbitrary localization tables, so `WeaponLocalization` reads keys like:
+Weapon localization lives in dedicated `localization/{locale}/weapons.json` files and is loaded by `WeaponLocalization`, not by `LocString("weapons", ...)`. The game does not automatically create arbitrary localization tables, so weapon text is read through this project helper instead of registering a custom table. Weapon hover-tip titles use a small registered `static_hover_tips` wrapper key because `HoverTip` requires a `LocString` title.
 
-- `GENSOUNOTABIBITO-BROKEN_SWORD.weaponTitle`
-- `GENSOUNOTABIBITO-BROKEN_SWORD.weaponDescription`
-- `GENSOUNOTABIBITO-NONE.weaponTitle`
+Weapon localization keys use this shape:
+
+- `GENSOUNOTABIBITO-BROKEN_SWORD.title`
+- `GENSOUNOTABIBITO-BROKEN_SWORD.description`
+- `GENSOUNOTABIBITO-NONE.title`
 
 ## Weapon Behavior Hook Pattern
 
@@ -324,7 +326,7 @@ Task BeforeTurnEnd(WeaponState weapon, Player player, PlayerChoiceContext choice
 IEnumerable<IHoverTip> GetHoverTips(WeaponState weapon);
 ```
 
-`GetHoverTips` is part of the weapon presentation contract. `WeaponBehavior.GetHoverTips` returns the generic weapon title/description hover tip. Derived behaviors should call `base.GetHoverTips(weapon)` before adding type-specific or weapon-specific tips.
+`GetHoverTips` is part of the weapon presentation contract. `WeaponBehavior.GetHoverTips` returns the generic weapon title/effect hover tip with current effect, upgrade preview, optional progress, or a max-level message. `WeaponBehavior` derives the default localization id from the behavior class name, e.g. `BrokenSwordBehavior` -> `GENSOUNOTABIBITO-BROKEN_SWORD`. Derived behaviors should define `CanonicalVars` with `WeaponDynamicVar` and optionally override `GetProgressDescription(weapon)` when the display depends on weapon level, and call `base.GetHoverTips(weapon)` before adding type-specific or weapon-specific tips.
 
 Examples:
 
@@ -350,7 +352,7 @@ To add a new weapon:
 2. Register the weapon from `Registry.Register()` by calling `WeaponBehaviorHookBridge.Register(id, behavior)`.
 3. If it is the default for a new `WeaponKind`, extend the hook bridge/default lookup there as needed.
 4. Override `MaxLevel` when the weapon should stop upgrading at a fixed level.
-5. Add `*.weaponTitle` and `*.weaponDescription` entries to `localization/eng/relics.json` and `localization/zhs/relics.json`.
+5. Add weapon entries to `localization/eng/weapons.json` and `localization/zhs/weapons.json`.
 6. Put long effect explanations in the weapon hover tip via behavior/localization; keep `WeaponBagRelic.description` short enough to show only equipped weapon names and levels.
 
 Weapon-type hover tips use custom `CardKeyword` values from `GensouNoTabibitoKeywords`:

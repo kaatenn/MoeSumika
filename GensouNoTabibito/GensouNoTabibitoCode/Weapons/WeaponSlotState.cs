@@ -28,6 +28,18 @@ public sealed class WeaponSlotState
         }
     }
 
+    public IEnumerable<EquippedWeapon> EquippedWeapons
+    {
+        get
+        {
+            if (PrimaryWeapon != null)
+                yield return new EquippedWeapon(WeaponSlot.Primary, PrimaryWeapon);
+
+            if (SecondaryWeapon != null)
+                yield return new EquippedWeapon(WeaponSlot.Secondary, SecondaryWeapon);
+        }
+    }
+
     public WeaponState EnsureWeaponEquipped(WeaponState fallbackWeapon)
     {
         PrimaryWeapon ??= fallbackWeapon;

@@ -2,7 +2,6 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 
@@ -10,17 +9,12 @@ namespace GensouNoTabibito.GensouNoTabibitoCode.Cards;
 
 public class BakedSweetPotato() : GensouNoTabibitoCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
 {
-    private Decimal _extraEnergy;
+    private Decimal _extraHealth;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new EnergyVar(1),
-        new EnergyVar("Increase", 2)
-    ];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-    [
-        EnergyHoverTip
+        new HealVar(1),
+        new HealVar("Increase", 1)
     ];
 
     public override IEnumerable<CardKeyword> CanonicalKeywords =>
@@ -31,20 +25,19 @@ public class BakedSweetPotato() : GensouNoTabibitoCard(1, CardType.Skill, CardRa
 
     public override bool HasTurnEndInHandEffect => true;
 
-    private Decimal ExtraEnergy
+    private Decimal ExtraHealth
     {
-        get => _extraEnergy;
+        get => _extraHealth;
         set
         {
             AssertMutable();
-            _extraEnergy = value;
+            _extraHealth = value;
         }
     }
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        await PlayerCmd.GainEnergy(DynamicVars.Energy.IntValue, Owner);
-        await Cmd.Wait(0.5f);
+        await CreatureCmd.Heal(Owner.Creature, DynamicVars.Heal.IntValue);
         var debuffs = Owner.Creature.Powers
             .Where(power => power.Type is PowerType.Debuff)
             .ToList();
@@ -69,15 +62,15 @@ public class BakedSweetPotato() : GensouNoTabibitoCard(1, CardType.Skill, CardRa
 
     protected override Task OnTurnEndInHand(PlayerChoiceContext choiceContext)
     {
-        DynamicVars.Energy.BaseValue += DynamicVars["Increase"].BaseValue;
-        ExtraEnergy += DynamicVars["Increase"].BaseValue;
+        DynamicVars.Heal.BaseValue += DynamicVars["Increase"].BaseValue;
+        ExtraHealth += DynamicVars["Increase"].BaseValue;
         return base.OnTurnEndInHand(choiceContext);
     }
 
     protected override void AfterDowngraded()
     {
         base.AfterDowngraded();
-        DynamicVars.Energy.BaseValue += ExtraEnergy;
+        DynamicVars.Heal.BaseValue += ExtraHealth;
     }
 
     protected override void OnUpgrade() => DynamicVars["Increase"].UpgradeValueBy(1);

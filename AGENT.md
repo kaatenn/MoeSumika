@@ -68,6 +68,10 @@ Card pool and color notes:
 - `WeaponActionCardPool` is the separate shared pool for reward action/status cards only.
 - Both pools use `GensouNoTabibitoCardColors.CardBackPink` (`#F08BB8`) for `ShaderColor` and `DeckEntryCardColor`, so large card backs and small deck-entry/card-bottom colors stay consistent.
 
+Current notable card behavior:
+
+- `BakedSweetPotato` is a rare retained/exhaust skill. On play, it heals with `DynamicVars.Heal` and removes all debuffs from the owner by applying negative stacks through `PowerCmd.Apply<TPower>`. Its turn-end-in-hand effect increases both the card's `Energy` DynamicVar and an internal extra-healing accumulator by `Increase`; `AfterDowngraded()` adds that accumulated healing back into `DynamicVars.Heal`. Keep its localization aligned with `Heal`, `Energy`, and `Increase`: it heals, removes debuffs, and retained copies grow both energy gain and healing.
+
 Power model files live under `GensouNoTabibitoCode/Powers/`. Current power work includes:
 
 - `GensouNoTabibitoCode/Powers/PeregrinPathPower.cs`

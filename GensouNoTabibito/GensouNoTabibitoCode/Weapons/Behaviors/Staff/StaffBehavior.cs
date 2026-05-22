@@ -1,4 +1,5 @@
 using GensouNoTabibito.GensouNoTabibitoCode.Keywords;
+using GensouNoTabibito.GensouNoTabibitoCode.Relics;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -10,6 +11,23 @@ public sealed class StaffBehavior : WeaponBehavior
 {
     public override int MaxLevel => 2;
     private int MagicLevel { get; set; }
+
+    public static int TryGetMagicLevel(Player player)
+    {
+        var bag = player.GetRelic<WeaponBagRelic>();
+        if (bag == null)
+        {
+            return 0;
+        }
+
+        if (player.GetWeaponSlot().PrimaryWeapon is not { Kind: WeaponKind.Staff } staff)
+        {
+            return 0;
+        }
+
+        var behavior = (StaffBehavior)WeaponBehaviorHookBridge.Get(player.GetWeaponSlot().PrimaryWeapon!);
+        return behavior.MagicLevel;
+    }
 
     public override Task AfterCardPlayed(
         WeaponState weapon,

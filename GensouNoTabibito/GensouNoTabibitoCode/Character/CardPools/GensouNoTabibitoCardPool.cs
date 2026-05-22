@@ -2,7 +2,7 @@ using BaseLib.Abstracts;
 using GensouNoTabibito.GensouNoTabibitoCode.Extensions;
 using Godot;
 
-namespace GensouNoTabibito.GensouNoTabibitoCode.Character;
+namespace GensouNoTabibito.GensouNoTabibitoCode.Character.CardPools;
 
 public class GensouNoTabibitoCardPool : CustomCardPoolModel
 {

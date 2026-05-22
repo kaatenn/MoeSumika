@@ -1,6 +1,7 @@
 using BaseLib.Abstracts;
 using BaseLib.Utils.NodeFactories;
 using GensouNoTabibito.GensouNoTabibitoCode.Cards;
+using GensouNoTabibito.GensouNoTabibitoCode.Character.CardPools;
 using GensouNoTabibito.GensouNoTabibitoCode.Extensions;
 using GensouNoTabibito.GensouNoTabibitoCode.Relics;
 using Godot;

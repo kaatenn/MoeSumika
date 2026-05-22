@@ -150,7 +150,7 @@ public static class WeaponBehaviorHookBridge
         return true;
     }
 
-    private static IWeaponBehavior Get(WeaponState weapon)
+    public static IWeaponBehavior Get(WeaponState weapon)
     {
         return BehaviorsById.TryGetValue(weapon.Id, out var behavior)
             ? behavior

@@ -1,6 +1,6 @@
 using BaseLib.Abstracts;
 using BaseLib.Utils;
-using GensouNoTabibito.GensouNoTabibitoCode.Character;
+using GensouNoTabibito.GensouNoTabibitoCode.Character.CardPools;
 using GensouNoTabibito.GensouNoTabibitoCode.Extensions;
 using GensouNoTabibito.GensouNoTabibitoCode.Weapons;
 using MegaCrit.Sts2.Core.Entities.Cards;

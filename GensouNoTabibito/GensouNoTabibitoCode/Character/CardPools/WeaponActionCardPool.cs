@@ -1,7 +1,7 @@
 using BaseLib.Abstracts;
 using Godot;
 
-namespace GensouNoTabibito.GensouNoTabibitoCode.Character;
+namespace GensouNoTabibito.GensouNoTabibitoCode.Character.CardPools;
 
 public class WeaponActionCardPool : CustomCardPoolModel
 {

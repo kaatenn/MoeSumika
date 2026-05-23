@@ -82,7 +82,7 @@ public static class WeaponBehaviorHookBridge
         return ForEach(slot, weapon => Get(weapon).AfterCardPlayed(weapon, player, choiceContext, cardPlay));
     }
 
-    public static Task BeforeTurnEnd(
+    public static Task BeforeSideTurnEnd(
         WeaponSlotState slot,
         Player player,
         PlayerChoiceContext choiceContext,

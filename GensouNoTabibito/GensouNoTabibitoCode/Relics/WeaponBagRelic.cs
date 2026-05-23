@@ -271,7 +271,7 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier, IWe
         await WeaponBehaviorHookBridge.AfterRoomEntered(slot, Owner, room);
     }
 
-    public override Task AfterSideTurnStart(CombatSide side, ICombatState combatState)
+    public override Task AfterSideTurnStart(CombatSide side, IReadOnlyList<Creature> participants, ICombatState combatState)
     {
         var slot = EnsureWeaponSlotEquipped();
         return WeaponBehaviorHookBridge.AfterSideTurnStart(slot, Owner, side, combatState);
@@ -289,10 +289,10 @@ public class WeaponBagRelic : GensouNoTabibitoRelic, IWeaponSlotSaveCarrier, IWe
         return WeaponBehaviorHookBridge.AfterCardPlayed(slot, Owner, choiceContext, cardPlay);
     }
 
-    public override Task BeforeTurnEnd(PlayerChoiceContext choiceContext, CombatSide side)
+    public override Task BeforeSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side, IEnumerable<Creature> participants)
     {
         var slot = EnsureWeaponSlotEquipped();
-        return WeaponBehaviorHookBridge.BeforeTurnEnd(slot, Owner, choiceContext, side);
+        return WeaponBehaviorHookBridge.BeforeSideTurnEnd(slot, Owner, choiceContext, side);
     }
 
     public override decimal ModifyDamageAdditive(

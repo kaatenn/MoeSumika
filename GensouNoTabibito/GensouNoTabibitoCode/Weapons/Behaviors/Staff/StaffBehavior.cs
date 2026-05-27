@@ -20,7 +20,7 @@ public sealed class StaffBehavior : WeaponBehavior
             return 0;
         }
 
-        if (player.GetWeaponSlot().PrimaryWeapon is not { Kind: WeaponKind.Staff } staff)
+        if (player.GetWeaponSlot().PrimaryWeapon is not { Kind: WeaponKind.Staff })
         {
             return 0;
         }

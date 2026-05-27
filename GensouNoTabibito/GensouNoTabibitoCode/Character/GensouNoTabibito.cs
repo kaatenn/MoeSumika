@@ -30,13 +30,13 @@ public class GensouNoTabibito : PlaceholderCharacterModel
         ModelDb.Card<DefendGensouNoTabibito>(),
         ModelDb.Card<DefendGensouNoTabibito>(),
         ModelDb.Card<DefendGensouNoTabibito>(),
-        ModelDb.Card<SwordArtWindrend>(),
+        ModelDb.Card<BakedSweetPotato>(),
         ModelDb.Card<BakedSweetPotato>()
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics =>
     [
-        ModelDb.Relic<WeaponLibraryRelic>()
+        ModelDb.Relic<WeaponBagRelic>()
     ];
 
     public override CardPoolModel CardPool => ModelDb.CardPool<GensouNoTabibitoCardPool>();
